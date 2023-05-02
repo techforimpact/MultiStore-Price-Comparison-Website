@@ -1,0 +1,97 @@
+.addCatagories {
+    margin-top: 4%;
+    margin-left: 8%;
+    
+}
+input[type=text] {
+    width: 90%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+  }
+
+.add-product-button {
+    background-color: #182c3c; 
+    border: none;
+    color: white;
+    padding: 0.5vw 1.5vw;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    margin-bottom: 1%;
+    cursor: pointer;
+    margin-left: 82%;
+  }
+
+    /* Style for the upper section */
+    .upper-section {
+        background-color: lightblue;
+        padding: 20px;
+      }
+  
+      /* Style for the text box */
+      .text-box {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        background-color: #f8f8f8;
+        font-size: 16px;
+      }
+  
+      /* Style for the lower section */
+      .lower-section {
+        border-top: medium solid #4280af8d;
+        border-collapse: collapse;       
+        width: 95%;
+      }
+      .viewCatagories {
+        margin-left: 5%;
+        margin-right: 5%;
+      }
+      .heading{
+        text-align: left;
+      }
+      /* Style for the table cells */
+      .table-cell {
+        
+        padding: 10px;
+        text-align: center;
+      }
+  
+      /* Style for the link */
+      .link {
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
+      }
+  
+      /* Style for the link when hovering */
+      .link:hover {
+        cursor: pointer;
+      }
+  
+      /* Style for the second column */
+      .second-column {
+        width: 100%;
+        text-align: left;
+      }
+      th {
+        background-color: #4280AF;
+        color: white;
+      }
+      
+      th, td {
+        text-align: left;
+        padding: 10px;
+      }
+      
+      tr:nth-child(even) {background-color: #f2f2f2;}
+      tr:nth-child(odd) {background-color: #d9d9d9;}

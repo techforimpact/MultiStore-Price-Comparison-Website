@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Object_Layer.Category>
+
+@{
+    ViewBag.Title = "Categories";
+    ViewBag.CssFilename = "stores.css";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="inSidebarContainer">
+    <div class="topnav">
+        <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
+        <a href="#news" class="material-symbols-outlined">notifications</a>
+        <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
+        @using (Html.BeginForm("SearchProduct", "Admin", new { area = "Admin" }, FormMethod.Get))
+        {
+            <button type="submit"><span class="material-symbols-outlined">Search</span></button>
+            <input type="search" placeholder="Search...">
+        }
+    </div>
+</div>
+
+
+<div class="mainPage">
+    <h2>Categories</h2>
+    <div class="upper-section">
+        @using (Html.BeginForm("AddCategory", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="addCatagories">
+                <h2>Add a new Category</h2>
+                <input type="text" name="Name" placeholder="Category name"><br>
+                <input type="text" name="parent_id" id="parent_id" placeholder="Category Parent (optional)"><br>
+                <button type="submit" class="add-product-button">Add</button>
+            </div>
+        }
+    </div>
+
+    <br />
+    <br />
+    <div class="lower-section">
+        <h3>View Catagories</h3>
+        <table class="viewCatagories">
+
+            <tr>
+                <th class="table-cell heading">
+                    @Html.DisplayNameFor(model => model.id)
+                </th>
+                <th class="table-cell">
+                    @Html.DisplayNameFor(model => model.name)
+                </th>
+                <th class="table-cell">
+                    @Html.DisplayNameFor(model => model.parent_id)
+                </th>
+                <th>
+                    Edit
+                </th>
+                <th>
+                    Details
+                </th>
+                <th>
+                    Delete
+                </th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td id="@item.id" class="table-cell">
+                        @Html.DisplayFor(modelItem => item.id)
+                    </td>
+                    <td class="table-cell link">
+                        @*@Html.ActionLink(item.Name, "Store", "Admin", new { id = item.id }, null)*@
+                        @Html.DisplayFor(modelItem => item.name);
+                    </td>
+                    <td class="table-cell">
+                        @Html.DisplayFor(modelItem => item.parent_id);
+                    </td>
+
+                    <td class="table-cell">
+                        @using (Html.BeginForm("EditCategory", "Admin", new { id = item.id }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="material-symbols-outlined link-button">Edit</button>
+                        }
+                    </td>
+                    <td class="table-cell">
+                        @using (Html.BeginForm("CategoryDetails", "Admin", new { id = item.id }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="material-symbols-outlined link-button">Details</button>
+                        }
+                    </td>
+                    <td class="table-cell">
+                        @using (Html.BeginForm("DeleteCategory", "Admin", new { id = item.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete this product?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="material-symbols-outlined link-button">Delete</button>
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+
+
+</div>

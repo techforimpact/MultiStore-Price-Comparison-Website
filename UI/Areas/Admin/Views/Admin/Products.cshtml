@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Object_Layer.Product>
+
+@{
+    ViewBag.Title = "Products";
+    ViewBag.CssFileName = "products.css";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="inSidebarContainer">
+    <div class="topnav">
+        <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
+        <a href="#news" class="material-symbols-outlined">notifications</a>
+        <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
+        @using (Html.BeginForm())
+        {
+            <button type="submit">Search</button>
+            @Html.TextBox("searchInput", null, new { @class = "form-control", placeholder = "Search..." })
+
+        }
+    </div>
+</div>
+
+<div class="mainPage">
+
+    <h2>View all products<button href="@Url.Action("AddProduct", "Admin", new { area = "Admin" })" class="btn btn-primary">Add Product</button></h2>
+
+        
+
+    <div class="grid-container">
+        @foreach (var item in Model)
+        {
+            <div class="grid-item border border-dark">
+                <a href="#">
+                    <div class="image-container border border-secondary">
+                        <img src="@Url.Content(item.image)" alt="@item.name" />
+                    </div>
+                    <div class="product-info">
+                        <h3>@item.name</h3>
+                        <p>@item.Category.name</p>
+                        <p>@item.price.ToString()</p>
+                        <p>@item.Store.name</p>
+                        <div class="buttons">
+
+                            @Html.ActionLink("Edit", "EditProduct", new { id = item.id }, new { @class = "material-symbols-outlined link" })
+                            @using (Html.BeginForm("DeleteProduct", "Admin", new { id = item.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete this product?');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <a class="material-symbols-outlined link" type="submit">Delete</a>
+                            }
+
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        }
+
+    </div>
+</div>

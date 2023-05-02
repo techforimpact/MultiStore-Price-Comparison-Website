@@ -1,0 +1,63 @@
+﻿@model UI.Areas.Admin.Controllers.StoreViewModel
+
+@{
+    ViewBag.Title = "StoreDetails";
+    ViewBag.CssFileName = "products.css";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="inSidebarContainer">
+    <div class="topnav">
+        <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
+        <a href="#news" class="material-symbols-outlined">notifications</a>
+        <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
+    </div>
+</div>
+
+<div class="mainPage">
+    <h1>StoreDetails</h1>
+
+    <hr />
+    <br />
+    <h3>Store Id: </h3><p>      @Model.StoreId</p>
+    <h3>Name: </h3>    <p>      @Model.Name</p>
+    <h3>Address: </h3> <p>      @Model.Address</p>
+    <h3>City: </h3>    <p>      @Model.City</p>
+    <h3>State: </h3>   <p>      @Model.State</p>
+    <h3>Country: </h3> <p>      @Model.Country</p>
+    <h3>ZipCode: </h3> <p>      @Model.zipcode</p>
+
+
+    <div class="grid-container">
+        @foreach (var item in Model.Products)
+        {
+            <div class="grid-item">
+                <a href="#">
+                    <div class="image-container">
+                        <img src="@Url.Content("~/Images/" + item.image)" alt="@item.name" />
+                    </div>
+                    <div class="product-info">
+                        <h3>@item.name</h3>
+                        <p>@item.Category.name</p>
+                        <p>@item.price.ToString()</p>
+                        <p>@item.Store.name</p>
+                        <div class="buttons">
+
+                            @Html.ActionLink("Edit", "EditProduct", new { id = item.id }) |
+                            @using (Html.BeginForm("Delete", "Admin", new { id = item.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete this product?');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="link-button">Delete</button>
+                            }
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        }
+
+    </div>
+
+
+
+</div>

@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "SaveProduct";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="inSidebarContainer">
+    <div class="topnav">
+        <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
+        <a href="#news" class="material-symbols-outlined">notifications</a>
+        <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
+        @using (Html.BeginForm())
+        {
+            <button type="submit">Search</button>
+            @Html.TextBox("searchInput", null, new { @class = "form-control", placeholder = "Search..." })
+
+        }
+    </div>
+</div>
+
+
+<div class="mainPage">
+    <h2>The Product has been updated succesfully.</h2>
+</div>
+

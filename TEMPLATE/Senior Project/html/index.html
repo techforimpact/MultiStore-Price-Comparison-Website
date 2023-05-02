@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="left">
+        <div class="imgcontainer">
+          <img src="logo.png" alt="Logo" class="logo">
+          <h1>MultiStore</h1>
+        </div>
+      </div>
+      <div class="right">
+        <div class="form-heading">
+          <h4>Welcome Back!</h4>
+          <p>Don't have an account yet? <a href="#">Sign up</a></p>
+        </div>
+        <form action="/action_page.php" class="form-container" onsubmit="return validateForm()">
+          <label for="email"><b>Username</b></label>
+          <input type="text" placeholder="Enter Username" name="email" id="email" required>
+          <label for="psw"><b>Password</b></label>
+          <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+          <span class="checkbox-container">
+            <input type="checkbox" name="remember" id="remember">
+            <label for="remember">Keep me logged in</label>
+          </span>
+          <div class="forgot-password">
+            <a href="#">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn">Login</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

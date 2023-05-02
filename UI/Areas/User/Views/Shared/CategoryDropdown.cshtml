@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Object_Layer.Category>
+
+@if (Model != null && Model.Any())
+{
+    <select name="category">
+        <option value="">--Select Category--</option>
+        @foreach (var category in Model)
+        {
+            <option value="@category.id">@category.name</option>
+        }
+    </select>
+}
+

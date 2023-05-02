@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/style.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <div class="imgcontainer">
+                <img src="~/Images/logo.png" alt="Logo" class="logo">
+                <h1>MultiStore</h1>
+            </div>
+        </div>
+        <div class="right">
+            @RenderBody()
+
+            <p class="form-heading text-danger">@ViewBag.Message</p>
+        </div>
+    </div>
+
+
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Security/Views/Shared/_Layout.cshtml";
+}
+
+<div class="form-heading">
+    <h4>Welcome Back!</h4>
+    <p>Don't have an account yet? @Html.ActionLink("Register Now", "Register", new { controller = "Home", area = "Security" })</p>
+</div>
+
+<form method="post" class="form-container" action="@Url.Action("Index", "Login" , new {controller="Login" , area="Security"})">
+
+    <label for="username"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="username" id="username" required>
+
+    <label for="password"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="password" id="password" required>
+
+    <span class="checkbox-container">
+        <input type="checkbox" name="remember" id="remember">
+        <label for="remember">Keep me logged in</label>
+    </span>
+
+    <div class="forgot-password">
+        <a href="#">Forgot password?</a>
+    </div>
+
+    <button type="submit" class="btn">Login</button>
+
+</form>
+

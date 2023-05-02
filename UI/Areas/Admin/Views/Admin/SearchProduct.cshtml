@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Object_Layer.Product>
+
+
+@{
+    ViewBag.Title = "SearchProduct";
+    ViewBag.CssFileName = "products.css";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="inSidebarContainer">
+    <div class="topnav">
+        <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
+        <a href="#news" class="material-symbols-outlined">notifications</a>
+        <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
+        @using (Html.BeginForm("SearchProduct", "Admin", new { area = "Admin" }, FormMethod.Get))
+        {
+            <button type="submit">Search</button>
+            <input type="search" placeholder="Search...">
+
+        }
+    </div>
+</div>
+
+<div class="mainPage">
+
+    <div class="grid-container">
+        @if (Model != null) { 
+            foreach (var product in Model)
+            {
+                <div class="grid-item">
+                    <a href="#">
+                        <div class="image-container">
+                            <img src="@Url.Content(product.ImageUrl)" alt="@product.Name">
+                        </div>
+                        <div class="product-info">
+                            <h3>@product.Name</h3>
+                            <p>@product.Category</p>
+                            <p>@product.Price.ToString()</p>
+                            <p>@product.Store.Name</p>
+                            <div class="buttons">
+                                <a href="#" class="edit"><i class="material-symbols-outlined">edit_square</i></a>
+                                <a href="#" class="remove"><i class="material-symbols-outlined">delete</i></a>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        }
+        else { 
+               <h1>No Products to Show</h1>
+        }
+    </div>
+
+</div>
+
+
+
+
