@@ -8,7 +8,7 @@
 
 <div class="inSidebarContainer">
     <div class="topnav">
-        <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined" onsubmit = "return confirm('Are you sure you want to delete this product?');">logout</a>
+        <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
         <a href="#news" class="material-symbols-outlined">notifications</a>
         <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
         @using (Html.BeginForm("Stores", "Admin", new { area = "Admin" }, FormMethod.Get))
@@ -18,7 +18,7 @@
 
         }
     </div>
-</div>
+</div>s
 
 
 <div class="mainPage">
@@ -115,7 +115,7 @@
                         }
                     </td>
                     <td class="table-cell">
-                        @using (Html.BeginForm("DeleteStore", "Admin", new { id = item.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete this product?');" }))
+                        @using (Html.BeginForm("DeleteStore", "Admin", new { id = item.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete this store?');" }))
                         {
                             @Html.AntiForgeryToken()
                             <button type="submit">Delete</button>

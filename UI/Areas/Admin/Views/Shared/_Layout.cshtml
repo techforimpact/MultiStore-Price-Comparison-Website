@@ -37,6 +37,11 @@
             <a href="@Url.Action("User_Menu", "Admin", new { area = "Admin" })">
             <li>Users Data</li>
             </a>
+
+
+            <a href="@Url.Action("Featured_Images", "Admin", new { area = "Admin" })">
+            <li>Featured Images</li>
+            </a>
             </span>
         </ul>
     </div>
@@ -46,5 +51,55 @@
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
+
+    @* Add the following script to populate the dropdown with product names matching the search input *@
+    @section scripts {
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $('#searchInputProducts').keyup(function () {
+                var searchText = $(this).val().toLowerCase();
+                if (searchText.length >= 3) {
+                    $.ajax({
+                        url: '@Url.Action("GetProducts", "Products")',
+                        type: 'POST',
+                        data: { searchText: searchText },
+                        success: function (response) {
+                            $('#searchDropdown').find('.dropdown-menu').empty();
+                            if (response.length > 0) {
+                                $('#dropdownMenuButton').removeAttr('disabled');
+                                $.each(response, function (index, value) {
+                                    var listItem = $('<a class="dropdown-item" href="#">' + value + '</a>');
+                                    $('#searchDropdown').find('.dropdown-menu').append(listItem);
+                                    listItem.click(function (e) {
+                                        e.preventDefault();
+                                        $('#searchInputProducts').val(value);
+                                        $('#searchForm').submit();
+                                    });
+                                });
+                            }
+                            else {
+                                $('#dropdownMenuButton').attr('disabled', true);
+                            }
+                        }
+                    });
+                }
+                else {
+                    $('#dropdownMenuButton').attr('disabled', true);
+                }
+            });
+        });
+        </script>
+
+
+        <script>
+            $(document).on('click', '.delete-product-link', function (event) {
+                var confirmMessage = $(this).data('confirm-message');
+                if (!confirm(confirmMessage)) {
+                    event.preventDefault();
+                }
+            });
+        </script>
+    }
+
 </body>
 </html>

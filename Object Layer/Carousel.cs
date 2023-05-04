@@ -17,8 +17,8 @@ namespace Object_Layer
         public int id { get; set; }
         public string heading { get; set; }
         public string sub_heading { get; set; }
-        public string imageurl { get; set; }
-        public Nullable<System.DateTime> created_at { get; set; }
+        public byte[] imageurl { get; set; }
+        public System.DateTime created_at { get; set; }
         public string carousel_role { get; set; }
     }
 }

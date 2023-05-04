@@ -16,7 +16,7 @@ namespace Object_Layer
     {
         public int id { get; set; }
         public int store_id { get; set; }
-        public string imageurl { get; set; }
+        public byte[] imageurl { get; set; }
     
         public virtual Store Store { get; set; }
     }

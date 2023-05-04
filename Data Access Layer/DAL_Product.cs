@@ -1,9 +1,12 @@
 ﻿using Object_Layer;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Data_Access_Layer
 {
@@ -15,6 +18,17 @@ namespace Data_Access_Layer
         {
             db = new MultiStoreEntities();
         }
+
+
+        public IEnumerable<Product> SearchProducts(string query)
+        {
+            var products = db.Products
+                .Where(p => p.name.Contains(query))
+                .ToList();
+
+            return products;
+        }
+
 
         public IEnumerable<Product> GetbyName(string name)
         {
@@ -90,8 +104,19 @@ namespace Data_Access_Layer
 
         public void Delete(int id)
         {
-            Product adm = db.Products.Find(id);
-            db.Products.Remove(adm);
+            // Get the product to delete
+            var productToDelete = db.Products.Find(id);
+
+            // Get the related wishlist items
+            var wishlistItemsToDelete = db.Wishlists.Where(w => w.product_id == id);
+
+            // Remove the wishlist items
+            db.Wishlists.RemoveRange(wishlistItemsToDelete);
+
+            // Delete the product
+            db.Products.Remove(productToDelete);
+
+            // Save changes
             SaveChanges();
 
         }

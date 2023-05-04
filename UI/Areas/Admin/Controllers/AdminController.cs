@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using UI.Models;
+using System.Text;
+using System.Drawing;
+using System.IO;
+using System.Web.WebSockets;
 
 namespace UI.Areas.Admin.Controllers
 {
@@ -20,6 +24,7 @@ namespace UI.Areas.Admin.Controllers
         private DAL_StoreImages storeimagedb;
         private DAL_CategoryImages categoryimagedb;
         private DAL_User userdb;
+        private DAL_Carousel carouseldb;
 
 
         public AdminController()
@@ -30,6 +35,7 @@ namespace UI.Areas.Admin.Controllers
             storeimagedb= new DAL_StoreImages();
             categoryimagedb= new DAL_CategoryImages();
             userdb = new DAL_User();
+            carouseldb = new DAL_Carousel();
         }
 
 
@@ -243,8 +249,14 @@ namespace UI.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 StoreImage image = new StoreImage();
-               
-                image.imageurl = Image.FileName;
+
+                byte[] imageBytes = null;
+                using (var binaryReader = new BinaryReader(Image.InputStream))
+                {
+                    imageBytes = binaryReader.ReadBytes(Image.ContentLength);
+                }
+
+                image.imageurl = imageBytes;
 
                 category.StoreImages.Add(image);
                 // add category to database
@@ -336,30 +348,39 @@ namespace UI.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> NewProduct(AddProductModel model)
+        public async Task<ActionResult> NewProduct(AddProductModel model, HttpPostedFileBase Image)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-
-/*                var fileId = GoogleDriveFileRepository.FileUpload(model.Image);*/
-
-                model.product.image = model.Image.FileName;
-                //add category to database
-                model.product.created_at = DateTime.Now;
-                productdb.Insert(model.product);
-
-                // redirect to category list
-                return RedirectToAction("Products");
+                return View(model);
             }
 
-            // if model is not valid, show error
-            return View(model.product);
+            byte[] imageBytes = null;
+            if (Image != null && Image.ContentLength > 0)
+            {
+
+                using (var binaryReader = new BinaryReader(Image.InputStream))
+                {
+                    imageBytes = binaryReader.ReadBytes(Image.ContentLength);
+                }
+            }
+
+            Product newproduct = new Product();
+
+            newproduct.name = model.product.name;
+            newproduct.description = model.product.description;
+            newproduct.price = model.product.price;
+            newproduct.store_id= model.product.store_id;
+            newproduct.category_id = model.product.category_id;
+            newproduct.image = imageBytes;
+            newproduct.created_at = DateTime.Now;
+            productdb.Insert(newproduct);
+
+            // redirect to product list
+            return RedirectToAction("Products");
         }
 
 
-        // POST: Admin/Delete/5
-        [HttpPost, ActionName("DeleteProduct")]
-        [ValidateAntiForgeryToken]
         public ActionResult DeleteProduct(int id)
         {
             if (Session["AdminUserName"] == null)
@@ -420,12 +441,30 @@ namespace UI.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SaveProduct(Product model , HttpPostedFileBase Image)
         {
-            model.image = Image.FileName;
+            byte[] imageBytes = null;
+            using (var binaryReader = new BinaryReader(Image.InputStream))
+            {
+                imageBytes = binaryReader.ReadBytes(Image.ContentLength);
+            }
+
+
+            model.image = imageBytes;
             productdb.Update(model);
 
             // redirect to category list
             return RedirectToAction("Products");
 
+        }
+
+
+        [HttpPost]
+        public JsonResult SearchProducts(string query)
+        {
+            var products = productdb.SearchProducts(query)
+                .Select(p => new { Name = p.name, Url = Url.Action("Details", "Products", new { id = p.id }) })
+                .ToList();
+
+            return Json(products);
         }
 
 
@@ -463,6 +502,24 @@ namespace UI.Areas.Admin.Controllers
 
             return View();
         }
+
+
+        //--------------------------------FEATURED IMAGES------------------------------------------------
+
+
+        public ActionResult Featured_Images()
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+            var images = carouseldb.GetAll();
+
+            return View(images);
+        }
+
+
 
         //--------------------------------NAVBAR CODE----------------------------------------------------
 

@@ -11,7 +11,7 @@
         <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
         <a href="#news" class="material-symbols-outlined">notifications</a>
         <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
-        @using (Html.BeginForm("SearchProduct", "Admin", new { area = "Admin" }, FormMethod.Get))
+        @using (Html.BeginForm("SearchCategory", "Admin", new { area = "Admin" }, FormMethod.Get))
         {
             <button type="submit"><span class="material-symbols-outlined">Search</span></button>
             <input type="search" placeholder="Search...">

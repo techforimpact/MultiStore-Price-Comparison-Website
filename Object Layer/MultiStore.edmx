@@ -4,17 +4,17 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MultiStoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MultiStoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Carousel">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="heading" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="sub_heading" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="imageurl" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="created_at" Type="datetime2" Precision="0" />
-          <Property Name="carousel_role" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="heading" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="sub_heading" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="imageurl" Type="image" Nullable="false" />
+          <Property Name="created_at" Type="datetime" Nullable="false" />
+          <Property Name="carousel_role" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="Categories">
           <Key>
@@ -31,7 +31,7 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="category_id" Type="int" Nullable="false" />
-          <Property Name="imageurl" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="imageurl" Type="image" />
         </EntityType>
         <EntityType Name="Prices">
           <Key>
@@ -51,7 +51,7 @@
           <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="category_id" Type="int" Nullable="false" />
           <Property Name="description" Type="text" />
-          <Property Name="image" Type="varchar" MaxLength="255" />
+          <Property Name="image" Type="image" />
           <Property Name="price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="store_id" Type="int" Nullable="false" />
           <Property Name="created_at" Type="datetime2" Precision="0" />
@@ -62,7 +62,7 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="store_id" Type="int" Nullable="false" />
-          <Property Name="imageurl" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="imageurl" Type="image" />
         </EntityType>
         <EntityType Name="Stores">
           <Key>
@@ -246,8 +246,7 @@
             <End Role="Wishlists" EntitySet="Wishlists" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MultiStoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -256,11 +255,11 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="heading" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="sub_heading" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="imageurl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="created_at" Type="DateTime" Precision="0" />
-          <Property Name="carousel_role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="heading" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sub_heading" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="imageurl" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="created_at" Type="DateTime" Precision="3" Nullable="false" />
+          <Property Name="carousel_role" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -279,7 +278,7 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="category_id" Type="Int32" Nullable="false" />
-          <Property Name="imageurl" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="imageurl" Type="Binary" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="Category" Relationship="Self.FK__CategoryI__categ__4D94879B" FromRole="CategoryImage" ToRole="Categories" />
         </EntityType>
         <EntityType Name="Price">
@@ -302,7 +301,7 @@
           <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="category_id" Type="Int32" Nullable="false" />
           <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="image" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="image" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="store_id" Type="Int32" Nullable="false" />
           <Property Name="created_at" Type="DateTime" Precision="0" />
@@ -317,7 +316,7 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="store_id" Type="Int32" Nullable="false" />
-          <Property Name="imageurl" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="imageurl" Type="Binary" FixedLength="false" MaxLength="Max" />
           <NavigationProperty Name="Store" Relationship="Self.FK__StoreImag__store__5DCAEF64" FromRole="StoreImage" ToRole="Stores" />
         </EntityType>
         <EntityType Name="Store">
@@ -517,10 +516,10 @@
           <EntitySetMapping Name="Carousels">
             <EntityTypeMapping TypeName="MultiStoreModel.Carousel">
               <MappingFragment StoreEntitySet="Carousel">
+                <ScalarProperty Name="imageurl" ColumnName="imageurl" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="heading" ColumnName="heading" />
                 <ScalarProperty Name="sub_heading" ColumnName="sub_heading" />
-                <ScalarProperty Name="imageurl" ColumnName="imageurl" />
                 <ScalarProperty Name="created_at" ColumnName="created_at" />
                 <ScalarProperty Name="carousel_role" ColumnName="carousel_role" />
               </MappingFragment>

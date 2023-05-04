@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Object_Layer.Carousel>
+
+@{
+    ViewBag.Title = "Featured_Images";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mainPage">
+
+    <h2>Featured_Images</h2>
+
+    <div>
+        <h4>Carousel</h4>
+        <hr />
+        <div class="grid-container">
+
+            @foreach (var item in Model)
+            {
+                <div class="grid-item border border-dark">
+                    <a href="#">
+                        <div class="image-container border border-secondary">
+                            @{
+                                var base64 = Convert.ToBase64String(item.imageurl);
+                                var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
+                            }
+                            <img src="@imgSrc" alt="@item.carousel_role" />
+                        </div>
+                        <div class="product-info">
+                            <h3>@item.heading</h3>
+                            <p>@item.sub_heading</p>
+                            <p>@item.carousel_role</p>
+                            <div class="buttons">
+                                @Html.ActionLink("Edit", "EditCarousel", new { id = item.id }, new { @class = "material-symbols-outlined link" })
+                                @using (Html.BeginForm("DeleteFeatured", "Admin", new { id = item.id }, FormMethod.Post, new { @class = "link", onsubmit = "return confirm('Are you sure you want to delete this Featured Image?');" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <a class="material-symbols-outlined link" type="submit">Delete</a>
+                                }
+
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+
+
+        </div>
+    </div>
+</div>

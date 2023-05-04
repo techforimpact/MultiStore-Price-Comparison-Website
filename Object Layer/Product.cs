@@ -25,7 +25,7 @@ namespace Object_Layer
         public string name { get; set; }
         public int category_id { get; set; }
         public string description { get; set; }
-        public string image { get; set; }
+        public byte[] image { get; set; }
         public decimal price { get; set; }
         public int store_id { get; set; }
         public Nullable<System.DateTime> created_at { get; set; }
