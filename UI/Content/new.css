@@ -14,3 +14,57 @@
 .logo span{
     margin-bottom: 0px;
 }
+
+.parent-container {
+    border: 1px solid #ccc;
+    height: 530px;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+.sub-container {
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+}
+
+    .sub-container:hover {
+        background-color: #f8f9fa;
+    }
+
+.product-image {
+    max-height: 50px;
+    max-width: 50px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+
+.product-details {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.name {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #ff0000;
+}
+
+
+
+
+
+
+.text-custom {
+    color: #2c547c;
+}

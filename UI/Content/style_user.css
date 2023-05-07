@@ -6101,6 +6101,7 @@ a.bg-primary:hover, a.bg-primary:focus,
 button.bg-primary:hover,
 button.bg-primary:focus {
   background-color: #ffc800 !important;
+  color: #000 !important;
 }
 
 .bg-secondary {
@@ -9320,7 +9321,7 @@ a.text-light:hover, a.text-light:focus {
 }
 
 .text-dark {
-  color: #3D464D !important;
+  color: white !important;
 }
 
 a.text-dark:hover, a.text-dark:focus {
@@ -9473,7 +9474,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .btn.btn-primary {
-  color: #3D464D !important;
+  color: white !important;
 }
 
 .btn-square {
