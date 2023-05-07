@@ -31,7 +31,7 @@
 <body>
     <!-- Topbar Start -->
     <div class="container-fluid">
-        <div class="row bg-secondary py-1 px-xl-5 flex-nowrap">
+        <div class="row bg-secondary py-1 px-xl-5">
             <div class="col-lg-4 d-none d-lg-block">
                 <div class="col-lg-4">
                     <a href="@Url.Action("Index")" class="logo text-decoration-none">
@@ -61,7 +61,7 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">@ViewBag.Username</button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a href="@Url.Action("EditUserPage", "User", new { area = "User" })" class="dropdown-item" role="button">Edit Profile</a>
+                            <a href="#" class="dropdown-item" role="button">Edit Profile</a>
                             <a href="@Url.Action("Logout", "User", new { area = "User" })" class="dropdown-item" role="button">Log out</a>
                         </div>
                     </div>
@@ -69,7 +69,11 @@
                 <div class="d-inline-flex align-items-center d-block d-lg-none">
                     <a href="" class="btn px-0 ml-2">
                         <i class="fas fa-heart text-dark"></i>
-                        <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">@ViewBag.WishlistCount</span>
+                        <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
+                    </a>
+                    <a href="" class="btn px-0 ml-2">
+                        <i class="fas fa-shopping-cart text-dark"></i>
+                        <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
                     </a>
                 </div>
             </div>

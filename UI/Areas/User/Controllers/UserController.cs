@@ -10,8 +10,6 @@ using System.Web.Mvc;
 using System.Web.UI;
 using Microsoft.Ajax.Utilities;
 using System.Web.Caching;
-using UI.Areas.Security.Controllers;
-using Google.Apis.Drive.v3.Data;
 
 namespace UI.Areas.User
 {
@@ -26,7 +24,6 @@ namespace UI.Areas.User
         private DAL_CategoryImages categoryimagedb;
         private DAL_StoreImages storeimagedb;
         private DAL_Price pricesdb;
-        private DAL_User userdb;
         private Object_Layer.User currentUser;
 /*        private DAL_User userdb;
         private Object_Layer.User sessionUser;*/
@@ -41,7 +38,6 @@ namespace UI.Areas.User
             categoryimagedb = new DAL_CategoryImages();
             storeimagedb = new DAL_StoreImages();
             pricesdb = new DAL_Price();
-            userdb = new DAL_User();
             currentUser = null;
 
 /*            string customerId = TempData["customerId"].ToString();
@@ -77,18 +73,16 @@ namespace UI.Areas.User
             model.CategoryImages = categoryimagedb.GetAll();
             model.StoreImages = storeimagedb.GetAll();
             model.FilteredProducts = productdb.GetAll();
-            model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
+            model.Wishlist = wishlistdb.GetAll();
 
             model.FilteredProducts = model.FilteredProducts.Where(p => p.created_at > DateTime.Now.AddMonths(-1));
             model.User = user;
 
             List<Category> categories = categorydb.GetAll().ToList();
-            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
-
+             
             ViewBag.Categories = categorydb.GetSubcategories(categories);
             ViewBag.Username = currentUser.name;
-            ViewBag.WishlistCount = wishcount;
-            ViewBag.userid = user.id;
+
 
 
             return View(model);
@@ -128,17 +122,14 @@ namespace UI.Areas.User
 
             CategoryViewModel model = new CategoryViewModel();
 
-            model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
             model.Category = categorydb.Getbyid(categoryId);
             model.CategoryImage = categoryimagedb.Get(categoryId);
             model.Products = productdb.GetAll();
 
             List<Category> categories = categorydb.GetAll().ToList();
-            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
-            ViewBag.WishlistCount = wishcount;
+
             ViewBag.Categories = categorydb.GetSubcategories(categories);
             ViewBag.Username = currentUser.name;
-            
 
             return View(model);
         }
@@ -160,19 +151,16 @@ namespace UI.Areas.User
                 return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
             }
 
-            SearchProductModelView model = new SearchProductModelView();
-            model.Products = productdb.GetAll();
-            model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
+
+            var products = productdb.GetAll();
 
 
             List<Category> categories = categorydb.GetAll().ToList();
-            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
-            ViewBag.WishlistCount = wishcount;
+
             ViewBag.Categories = categorydb.GetSubcategories(categories);
             ViewBag.Username = currentUser.name;
-            ViewBag.userid = currentUser.id;
 
-            return View(model);
+            return View(products);
         }
 
 
@@ -203,16 +191,14 @@ namespace UI.Areas.User
             ProductDetailModelView model = new ProductDetailModelView();
 
             model.FilteredProducts = productdb.GetAll().Where(p => p.created_at > DateTime.Now.AddMonths(-1));
-            model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
+
             model.Product = prod;
             model.Prices = pricesdb.GetAllByProduct(id);
 
             List<Category> categories = categorydb.GetAll().ToList();
-            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
-            ViewBag.WishlistCount = wishcount;
+
             ViewBag.Categories = categorydb.GetSubcategories(categories);
             ViewBag.Username = currentUser.name;
-            ViewBag.userid = currentUser.id;
 
 
             return View(model);
@@ -234,24 +220,19 @@ namespace UI.Areas.User
                 return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
             }
 
-            SearchProductModelView model = new SearchProductModelView();
 
-            model.Products = productdb.SearchProducts(searchTerm);
-            model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
-
-            if (model.Products == null)
+            var products = productdb.SearchProducts(searchTerm);
+            if (products == null)
             {
                 return HttpNotFound();
             }
 
             List<Category> categories = categorydb.GetAll().ToList();
-            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
-            ViewBag.WishlistCount = wishcount;
+
             ViewBag.Categories = categorydb.GetSubcategories(categories);
             ViewBag.Username = currentUser.name;
-            ViewBag.userid = currentUser.id;
 
-            return View(model);
+            return View(products);
 
         }
 
@@ -277,11 +258,11 @@ namespace UI.Areas.User
             StoresViewModel model = new StoresViewModel();
 
             model.Stores = storedb.GetAll();
+            
             model.StoreImages = storeimagedb.GetAll();
 
             List<Category> categories = categorydb.GetAll().ToList();
-            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
-            ViewBag.WishlistCount = wishcount;
+
             ViewBag.Categories = categorydb.GetSubcategories(categories);
             ViewBag.Username = currentUser.name;
 
@@ -319,235 +300,15 @@ namespace UI.Areas.User
 
             model.Store = shop;
             model.Products = productdb.GetStoreProducts(id);
-            model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
+
 
 
             List<Category> categories = categorydb.GetAll().ToList();
-            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
-            ViewBag.WishlistCount = wishcount;
+
             ViewBag.Categories = categorydb.GetSubcategories(categories);
             ViewBag.Username = currentUser.name;
-            ViewBag.userid = currentUser.id;
 
             return View(model);
-
-        }
-
-        public ActionResult EditUserPage()
-        {
-            var user = (Object_Layer.User)Session["CurrentUser"];
-            // var user = (User)TempData["CurrentUser"];
-
-            // Use the user object to display user data or perform other operations
-            if (user != null)
-            {
-                currentUser = user;
-            }
-
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
-            }
-
-
-            List<Category> categories = categorydb.GetAll().ToList();
-            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
-            ViewBag.WishlistCount = wishcount;
-            ViewBag.Categories = categorydb.GetSubcategories(categories);
-            ViewBag.Username = currentUser.name;
-
-            return View();
-        }
-
-
-
-
-        [HttpPost]
-        public ActionResult EditUserPage(FormCollection form)
-        {
-            var user = (Object_Layer.User)Session["CurrentUser"];
-            // var user = (User)TempData["CurrentUser"];
-
-            // Use the user object to display user data or perform other operations
-            if (user != null)
-            {
-                currentUser = user;
-            }
-
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
-            }
-
-
-            string email = form["email"];
-            string currpassword = form["CurrentPassword"];
-            string newpass = form["NewPassword"];
-            string confpass = form["ConfirmPassword"];
-
-            if (email == user.email)
-            {
-                if (currpassword == user.password)
-                {
-                    if (confpass == newpass)
-                    {
-
-                        user.password = newpass;
-
-                        Object_Layer.User obj = user;
-
-                        userdb = (DAL_User)Session["dbContext"];
-
-                        userdb.Update(obj);
-
-                        return RedirectToAction("Index", "User", new { controller = "User", area = "User" });
-
-                    }
-                    else
-                    {
-                        ViewBag.Message = "The Passwords don't match.";
-                    }
-                }
-                else
-                {
-                    ViewBag.Message = "The Current password is not correct.";
-                }
-            }
-            else
-            {
-                ViewBag.Message = "The Email is not correct.";
-            }
-
-
-
-            List<Category> categories = categorydb.GetAll().ToList();
-            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
-            ViewBag.WishlistCount = wishcount;
-            ViewBag.Categories = categorydb.GetSubcategories(categories);
-            ViewBag.Username = currentUser.name;
-
-            return View();
-        }
-
-
-        public ActionResult Wishlist()
-        {
-
-            var user = (Object_Layer.User)Session["CurrentUser"];
-            // var user = (User)TempData["CurrentUser"];
-
-            // Use the user object to display user data or perform other operations
-            if (user != null)
-            {
-                currentUser = user;
-            }
-
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Login", new { area = "Login", controller = "Login" });
-            }
-
-            var wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
-
-
-            List<Category> categories = categorydb.GetAll().ToList();
-            var wishcount = wishlist.Count();
-            ViewBag.WishlistCount = wishcount;
-            ViewBag.Categories = categorydb.GetSubcategories(categories);
-            ViewBag.Username = currentUser.name;
-
-
-            return View(wishlist);
-        }
-
-        public ActionResult RemoveWishlist(int id)
-        {
-            var user = (Object_Layer.User)Session["CurrentUser"];
-            // var user = (User)TempData["CurrentUser"];
-
-            // Use the user object to display user data or perform other operations
-            if (user != null)
-            {
-                currentUser = user;
-            }
-
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Login", new { area = "Login", controller = "Login" });
-            }
-
-            var wishproduct = wishlistdb.GetAll().Where(c => c.product_id == id && c.user_id == user.id);
-
-            wishlistdb.Delete(wishproduct.First().id);
-
-
-            return RedirectToAction("Wishlist");
-        }
-
-        public ActionResult AddToWish(int id)
-        {
-            var user = (Object_Layer.User)Session["CurrentUser"];
-            // var user = (User)TempData["CurrentUser"];
-
-            // Use the user object to display user data or perform other operations
-            if (user != null)
-            {
-                currentUser = user;
-            }
-
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Login", new { area = "Login", controller = "Login" });
-            }
-
-            string lastPageUrl = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : string.Empty;
-
-            var wish = wishlistdb.GetAll().Where(c => c.user_id == user.id && c.product_id == id);
-
-            if (wish.Count() != 0)
-            {
-                return Redirect(lastPageUrl);
-            }
-
-            Wishlist obj = new Wishlist();
-
-            obj.product_id = id;
-            obj.user_id = user.id;
-            obj.created_at = DateTime.Now;
-
-            wishlistdb.Insert(obj);
-
-            return Redirect(lastPageUrl);
-        }
-
-        public ActionResult RemoveWish(int id)
-        {
-            var user = (Object_Layer.User)Session["CurrentUser"];
-            // var user = (User)TempData["CurrentUser"];
-
-            // Use the user object to display user data or perform other operations
-            if (user != null)
-            {
-                currentUser = user;
-            }
-
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Login", new { area = "Login", controller = "Login" });
-            }
-
-            string lastPageUrl = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : string.Empty;
-
-            var wish = wishlistdb.GetAll().Where(c => c.user_id == user.id && c.product_id == id);
-
-            if (wish == null)
-            {
-                return Redirect(lastPageUrl);
-            }
-
-            wishlistdb.DeleteObj(wish.First());
-
-            return Redirect(lastPageUrl);
 
         }
 
@@ -581,14 +342,12 @@ namespace UI.Areas.User
         public Category Category { get; set;}
         public CategoryImage CategoryImage { get; set; }
         public IEnumerable<Product> Products { get; set; }
-        public IEnumerable<Wishlist> Wishlist { get; set; }
     }
 
     public class ProductDetailViewModel
     {
         public Product Product { get; set;}
         public IEnumerable<Product> FilteredProducts { get; set; }
-        public IEnumerable<Wishlist> Wishlist { get; set; }
     }
 
     public class StoresViewModel
@@ -602,7 +361,6 @@ namespace UI.Areas.User
     {
         public Store Store { get; set; }
         public IEnumerable<Product> Products { get; set; }
-        public IEnumerable<Wishlist> Wishlist { get; set; }
     }
 
     public class ProductDetailModelView
@@ -611,14 +369,5 @@ namespace UI.Areas.User
         public IEnumerable<Price> Prices { get; set; }
 
         public IEnumerable<Product> FilteredProducts { get; set; }
-        public IEnumerable<Wishlist> Wishlist { get; set; }
-
-    }
-
-    public class SearchProductModelView
-    {
-        public IEnumerable<Product> Products { get; set; }
-
-        public IEnumerable<Wishlist> Wishlist { get; set; }
     }
 }

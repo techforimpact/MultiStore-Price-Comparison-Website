@@ -55,12 +55,6 @@ namespace Data_Access_Layer
 
         }
 
-        public void DeleteObj(Wishlist obj)
-        {
-            db.Wishlists.Remove(obj);
-            SaveChanges();
-        }
-
         public void SaveChanges()
         {
             db.SaveChanges();
