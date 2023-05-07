@@ -6,6 +6,13 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .indented {
+        font-size: x-large;
+        margin-left: 80px; /* adjust the value as needed */
+    }
+</style>
+
 <div class="inSidebarContainer">
     <div class="topnav">
         <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
@@ -19,35 +26,47 @@
 
     <hr />
     <br />
-    <h3>Category Id: </h3><p>      @Model.CategoryId</p>
-    <h3>Name: </h3>    <p>      @Model.Name</p>
-    <h3>Parent Id: </h3> <p>      @Model.ParentId</p>
+    <br />
 
+    <h2>Category Id: </h2><p class="indented">@Model.CategoryId</p>
+    <h2>Name: </h2>    <p class="indented">@Model.Name</p>
+    <h2>Parent Id: </h2> 
+    @if (Model.ParentId != null) { 
+        <p class="indented">@Model.ParentId</p>
+    }
+    else
+    {
+        <p class="indented">None</p>
+    }
     <div class="grid-container">
         @foreach (var item in Model.Products)
         {
             <div class="grid-item">
-                <a href="#">
                     <div class="image-container">
-                        <img src="@Url.Content("~/Images/" + item.image)" alt="@item.name" />
+                        @{
+                            if (item.image != null)
+                            {
+                                var base64 = Convert.ToBase64String(item.image);
+                                var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
+
+
+
+                                <img src="@Url.Content(@imgSrc)" alt="@item.name" />
+                            }
+                        }
                     </div>
                     <div class="product-info">
-                        <h3>@item.name</h3>
-                        <p>@item.Category.name</p>
-                        <p>@item.price.ToString()</p>
-                        <p>@item.Store.name</p>
+                        <h3>@item.name<br /></h3>
+                        <p>@item.Category.name</p><br />
+                        <p>@item.price.ToString()</p><br />
+                        <p>@item.Store.name</p><br />
                         <div class="buttons">
-
-                            @Html.ActionLink("Edit", "EditProduct", new { id = item.id }) |
-                            @using (Html.BeginForm("Delete", "Admin", new { id = item.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete this product?');" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="link-button">Delete</button>
-                            }
+                            @Html.ActionLink("Edit", "EditProduct", new { id = item.id }, new { @class = "material-symbols-outlined link" })
+                            <a href="@Url.Action("DeleteProduct", new { id = item.id })" class="material-symbols-outlined link delete-product-link" data-confirm-message="Are you sure you want to delete this product?">Delete</a>
                         </div>
                     </div>
-                </a>
             </div>
+
 
         }
 

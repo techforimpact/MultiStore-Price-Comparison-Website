@@ -213,6 +213,7 @@
     <Compile Include="DAL_CategoryImages.cs" />
     <Compile Include="DAL_Carousel.cs" />
     <Compile Include="DAL_Category.cs" />
+    <Compile Include="DAL_Price.cs" />
     <Compile Include="DAL_StoreImages.cs" />
     <Compile Include="DAL_Wishlist.cs" />
     <Compile Include="DAL_Product.cs" />

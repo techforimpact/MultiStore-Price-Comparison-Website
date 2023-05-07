@@ -25,21 +25,32 @@
 
     <div class="grid-container">
         @if (Model != null) { 
-            foreach (var product in Model)
+            foreach (var item in Model)
             {
-                <div class="grid-item">
+                <div class="grid-item border border-dark">
                     <a href="#">
-                        <div class="image-container">
-                            <img src="@Url.Content(product.ImageUrl)" alt="@product.Name">
+                        <div class="image-container border border-secondary">
+                            @{
+                                if (item.image != null)
+                                {
+                                    var base64 = Convert.ToBase64String(item.image);
+                                    var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
+
+
+
+                                    <img src="@Url.Content(@imgSrc)" alt="@item.name" />
+                                }
+                            }
                         </div>
                         <div class="product-info">
-                            <h3>@product.Name</h3>
-                            <p>@product.Category</p>
-                            <p>@product.Price.ToString()</p>
-                            <p>@product.Store.Name</p>
+                            <h3>@item.name</h3>
+                            <p>@item.Category.name</p>
+                            <p>SAR @item.price.ToString()</p>
+                            <p>@item.Store.name</p>
                             <div class="buttons">
-                                <a href="#" class="edit"><i class="material-symbols-outlined">edit_square</i></a>
-                                <a href="#" class="remove"><i class="material-symbols-outlined">delete</i></a>
+
+                                @Html.ActionLink("Edit", "EditProduct", new { id = item.id }, new { @class = "material-symbols-outlined link" })
+                                <a href="@Url.Action("DeleteProduct", new { id = item.id })" class="material-symbols-outlined link delete-product-link" data-confirm-message="Are you sure you want to delete this product?">Delete</a>
                             </div>
                         </div>
                     </a>

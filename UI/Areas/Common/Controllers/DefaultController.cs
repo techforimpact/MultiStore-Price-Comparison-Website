@@ -1,21 +1,16 @@
 ﻿using Data_Access_Layer;
-using System.Collections.Generic;
-using System.Threading;
-using Microsoft.AspNetCore.Mvc;
 using Object_Layer;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.UI;
-using Microsoft.Ajax.Utilities;
-using System.Web.Caching;
 
-namespace UI.Areas.User
+namespace UI.Areas.Common.Controllers
 {
-    public class UserController : Controller
+    public class DefaultController : Controller
     {
-
+        // GET: Common/Default
         private DAL_Product productdb;
         private DAL_Category categorydb;
         private DAL_Store storedb;
@@ -24,11 +19,10 @@ namespace UI.Areas.User
         private DAL_CategoryImages categoryimagedb;
         private DAL_StoreImages storeimagedb;
         private DAL_Price pricesdb;
-        private Object_Layer.User currentUser;
-/*        private DAL_User userdb;
-        private Object_Layer.User sessionUser;*/
+        /*        private DAL_User userdb;
+                private Object_Layer.User sessionUser;*/
 
-        public UserController()
+        public DefaultController()
         {
             productdb = new DAL_Product();
             categorydb = new DAL_Category();
@@ -38,37 +32,39 @@ namespace UI.Areas.User
             categoryimagedb = new DAL_CategoryImages();
             storeimagedb = new DAL_StoreImages();
             pricesdb = new DAL_Price();
-            currentUser = null;
 
-/*            string customerId = TempData["customerId"].ToString();
+            /*            string customerId = TempData["customerId"].ToString();
 
 
-            sessionUser = userdb.Getbyid(Convert.ToInt32(customerId));*/
+                        sessionUser = userdb.Getbyid(Convert.ToInt32(customerId));*/
 
         }
         // GET: User/User
         public ActionResult Index()
         {
+
             var user = (Object_Layer.User)Session["CurrentUser"];
             // var user = (User)TempData["CurrentUser"];
 
             // Use the user object to display user data or perform other operations
             if (user != null)
             {
-                currentUser = user;
-            }
+                if(user.role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin", controller = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User", new { area = "User", controller = "User" });
+                }
 
-            if (currentUser== null)
-            {
-                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
             }
-
 
             IndexViewModel model = new IndexViewModel();
 
             model.Products = productdb.GetAll();
             model.Categories = categorydb.GetAll();
-            model.Stores= storedb.GetAll();
+            model.Stores = storedb.GetAll();
             model.Carousel = carouseldb.GetAll();
             model.CategoryImages = categoryimagedb.GetAll();
             model.StoreImages = storeimagedb.GetAll();
@@ -76,12 +72,11 @@ namespace UI.Areas.User
             model.Wishlist = wishlistdb.GetAll();
 
             model.FilteredProducts = model.FilteredProducts.Where(p => p.created_at > DateTime.Now.AddMonths(-1));
-            model.User = user;
+
 
             List<Category> categories = categorydb.GetAll().ToList();
-             
+
             ViewBag.Categories = categorydb.GetSubcategories(categories);
-            ViewBag.Username = currentUser.name;
 
 
 
@@ -90,7 +85,6 @@ namespace UI.Areas.User
 
         public PartialViewResult CategoryDropdown()
         {
-
             var categories = categorydb.GetAll();
             return PartialView("CategoryDropdown", categories);
         }
@@ -104,20 +98,22 @@ namespace UI.Areas.User
             // Use the user object to display user data or perform other operations
             if (user != null)
             {
-                currentUser = user;
-            }
+                if (user.role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin", controller = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User", new { area = "User", controller = "User" });
+                }
 
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
             }
-
 
 
             var category = categorydb.Getbyid(categoryId);
             if (category == null)
             {
-                return RedirectToAction("Index" , "User");
+                return RedirectToAction("Index", "User");
             }
 
             CategoryViewModel model = new CategoryViewModel();
@@ -129,7 +125,6 @@ namespace UI.Areas.User
             List<Category> categories = categorydb.GetAll().ToList();
 
             ViewBag.Categories = categorydb.GetSubcategories(categories);
-            ViewBag.Username = currentUser.name;
 
             return View(model);
         }
@@ -137,18 +132,22 @@ namespace UI.Areas.User
 
         public ActionResult Products()
         {
+
             var user = (Object_Layer.User)Session["CurrentUser"];
             // var user = (User)TempData["CurrentUser"];
 
             // Use the user object to display user data or perform other operations
             if (user != null)
             {
-                currentUser = user;
-            }
+                if (user.role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin", controller = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User", new { area = "User", controller = "User" });
+                }
 
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
             }
 
 
@@ -158,7 +157,6 @@ namespace UI.Areas.User
             List<Category> categories = categorydb.GetAll().ToList();
 
             ViewBag.Categories = categorydb.GetSubcategories(categories);
-            ViewBag.Username = currentUser.name;
 
             return View(products);
         }
@@ -172,18 +170,20 @@ namespace UI.Areas.User
             // Use the user object to display user data or perform other operations
             if (user != null)
             {
-                currentUser = user;
-            }
+                if (user.role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin", controller = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User", new { area = "User", controller = "User" });
+                }
 
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
             }
-
 
 
             var prod = productdb.Getbyid(id);
-            if(prod == null)
+            if (prod == null)
             {
                 return HttpNotFound();
             }
@@ -198,7 +198,6 @@ namespace UI.Areas.User
             List<Category> categories = categorydb.GetAll().ToList();
 
             ViewBag.Categories = categorydb.GetSubcategories(categories);
-            ViewBag.Username = currentUser.name;
 
 
             return View(model);
@@ -212,14 +211,16 @@ namespace UI.Areas.User
             // Use the user object to display user data or perform other operations
             if (user != null)
             {
-                currentUser = user;
-            }
+                if (user.role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin", controller = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User", new { area = "User", controller = "User" });
+                }
 
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
             }
-
 
             var products = productdb.SearchProducts(searchTerm);
             if (products == null)
@@ -230,7 +231,6 @@ namespace UI.Areas.User
             List<Category> categories = categorydb.GetAll().ToList();
 
             ViewBag.Categories = categorydb.GetSubcategories(categories);
-            ViewBag.Username = currentUser.name;
 
             return View(products);
 
@@ -239,37 +239,36 @@ namespace UI.Areas.User
 
         public ActionResult Shops()
         {
+
             var user = (Object_Layer.User)Session["CurrentUser"];
             // var user = (User)TempData["CurrentUser"];
 
             // Use the user object to display user data or perform other operations
             if (user != null)
             {
-                currentUser = user;
+                if (user.role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin", controller = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User", new { area = "User", controller = "User" });
+                }
+
             }
-
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
-            }
-
-
 
             StoresViewModel model = new StoresViewModel();
 
             model.Stores = storedb.GetAll();
-            
+
             model.StoreImages = storeimagedb.GetAll();
 
             List<Category> categories = categorydb.GetAll().ToList();
 
             ViewBag.Categories = categorydb.GetSubcategories(categories);
-            ViewBag.Username = currentUser.name;
 
             return View(model);
         }
-
-
 
 
         public ActionResult ShopDetail(int id)
@@ -280,17 +279,20 @@ namespace UI.Areas.User
             // Use the user object to display user data or perform other operations
             if (user != null)
             {
-                currentUser = user;
-            }
+                if (user.role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin", controller = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User", new { area = "User", controller = "User" });
+                }
 
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
             }
 
 
             var shop = storedb.Getbyid(id);
-            if(shop == null)
+            if (shop == null)
             {
                 return HttpNotFound();
             }
@@ -306,27 +308,22 @@ namespace UI.Areas.User
             List<Category> categories = categorydb.GetAll().ToList();
 
             ViewBag.Categories = categorydb.GetSubcategories(categories);
-            ViewBag.Username = currentUser.name;
 
             return View(model);
 
         }
 
-
-
-        public ActionResult Logout()
+        public ActionResult Wishlist()
         {
-            Session.Remove("CurrentUser");
-            Session.Abandon();
-            return RedirectToAction("Index", "Default", new { controller = "Default", area = "Common" });
+            return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
         }
+
     }
 
 
 
     public class IndexViewModel
     {
-        public Object_Layer.User User { get; set; }
         public IEnumerable<Category> Categories { get; set; }
         public IEnumerable<Store> Stores { get; set; }
         public IEnumerable<Product> Products { get; set; }
@@ -339,14 +336,14 @@ namespace UI.Areas.User
 
     public class CategoryViewModel
     {
-        public Category Category { get; set;}
+        public Category Category { get; set; }
         public CategoryImage CategoryImage { get; set; }
         public IEnumerable<Product> Products { get; set; }
     }
 
     public class ProductDetailViewModel
     {
-        public Product Product { get; set;}
+        public Product Product { get; set; }
         public IEnumerable<Product> FilteredProducts { get; set; }
     }
 

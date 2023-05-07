@@ -21,7 +21,7 @@
 
 
 <div class="mainPage">
-    <h2>User_Menu</h2>
+    <h2>User Menu</h2>
 
     <p>
         @Html.ActionLink("Create New", "NewUser")
@@ -65,9 +65,8 @@
                     @Html.DisplayFor(modelItem => item.role)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                    @Html.ActionLink("Edit", "EditUser", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "DeleteUser", new { id = item.id })
                 </td>
             </tr>
         }

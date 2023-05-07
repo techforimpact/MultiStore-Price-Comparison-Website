@@ -55,7 +55,9 @@ namespace UI.Areas.Security.Controllers
                 }
                 else
                 {
-                    Session["CustomerId"] = admin.id;
+                    var user = userdb.FindUser(username, password);
+
+                    Session["CurrentUser"] = user;
                     // Redirect to user area
                     return RedirectToAction("Index", "User", new { controller = "User", area = "User" });
                 }

@@ -369,6 +369,22 @@
     <Content Include="Areas\Admin\Views\Admin\NewUser.cshtml" />
     <Content Include="Areas\Admin\Views\Admin\Complaints.cshtml" />
     <Content Include="Areas\Admin\Views\Admin\Featured_Images.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\AddCarousel.cshtml" />
+    <Content Include="Areas\User\Views\User\CategoryPage.cshtml" />
+    <Content Include="Areas\User\Views\User\Products.cshtml" />
+    <Content Include="Areas\User\Views\User\Shops.cshtml" />
+    <Content Include="Areas\User\Views\User\ShopDetail.cshtml" />
+    <Content Include="Areas\User\Views\User\ProductDetail.cshtml" />
+    <Content Include="Areas\User\Views\User\SearchProduct.cshtml" />
+    <Content Include="Areas\Common\Views\web.config" />
+    <Content Include="Areas\Common\Views\Default\Index.cshtml" />
+    <Content Include="Areas\Common\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Common\Views\Default\CategoryPage.cshtml" />
+    <Content Include="Areas\Common\Views\Default\Products.cshtml" />
+    <Content Include="Areas\Common\Views\Default\ProductDetail.cshtml" />
+    <Content Include="Areas\Common\Views\Default\SearchProduct.cshtml" />
+    <Content Include="Areas\Common\Views\Default\Shops.cshtml" />
+    <Content Include="Areas\Common\Views\Default\ShopDetail.cshtml" />
     <None Include="Scripts\jquery-1.8.0.intellisense.js" />
     <Content Include="Scripts\contact.js" />
     <Content Include="Scripts\easing.min.js" />
@@ -388,6 +404,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminController.cs" />
+    <Compile Include="Areas\Common\CommonAreaRegistration.cs" />
+    <Compile Include="Areas\Common\Controllers\DefaultController.cs" />
     <Compile Include="Areas\Security\Controllers\HomeController.cs" />
     <Compile Include="Areas\Security\Controllers\LoginController.cs" />
     <Compile Include="Areas\Security\SecurityAreaRegistration.cs" />
@@ -448,6 +466,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Common\Data\" />
     <Folder Include="Areas\Security\Data\" />
     <Folder Include="Areas\User\Data\" />
     <Folder Include="Controllers\" />

@@ -11,6 +11,7 @@ using System.Text;
 using System.Drawing;
 using System.IO;
 using System.Web.WebSockets;
+using System.Web.Optimization;
 
 namespace UI.Areas.Admin.Controllers
 {
@@ -307,7 +308,7 @@ namespace UI.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                /*                var fileId = GoogleDriveFileRepository.FileUpload(model.Image);*/
+
 
                 productdb.Update(model);
 
@@ -457,16 +458,6 @@ namespace UI.Areas.Admin.Controllers
         }
 
 
-        [HttpPost]
-        public JsonResult SearchProducts(string query)
-        {
-            var products = productdb.SearchProducts(query)
-                .Select(p => new { Name = p.name, Url = Url.Action("Details", "Products", new { id = p.id }) })
-                .ToList();
-
-            return Json(products);
-        }
-
 
         //------------------------USER_MENU CODE----------------------------------------------------------
 
@@ -484,23 +475,102 @@ namespace UI.Areas.Admin.Controllers
             return View(users);
         }
 
-        public ActionResult NewUser(Object_Layer.User user)
+
+        public ActionResult NewUser()
         {
             if (Session["AdminUserName"] == null)
             {
                 return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
             }
 
-            if(ModelState.IsValid)
+            IEnumerable<string> role = new List<string> { "admin", "customer" };
+
+            var roleList = role.Select(c => new SelectListItem
             {
-                user.created_at = DateTime.Now;
+                Value = c,
+                Text = c
+            });
 
-                userdb.Insert(user);
-
-                return RedirectToAction("User_Menu");
-            }
+            // Add the categoryListItems to the ViewData dictionary
+            ViewData["user_role"] = roleList;
 
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddNewUser(Object_Layer.User model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            model.created_at = DateTime.Now;
+            userdb.Insert(model);
+
+            // redirect to product list
+            return RedirectToAction("User_Menu");
+        }
+
+
+
+        public ActionResult EditUser(int id)
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+            var user = userdb.Getbyid(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            IEnumerable<string> role = new List<string> { "admin", "customer" };
+
+            var roleList = role.Select(c => new SelectListItem
+            {
+                Value = c,
+                Text = c
+            });
+
+            // Add the categoryListItems to the ViewData dictionary
+            ViewData["user_role"] = roleList;
+
+
+            return View(user);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveUser(Object_Layer.User model)
+        {
+
+            userdb.Update(model);
+
+            // redirect to category list
+            return RedirectToAction("User_Menu");
+
+        }
+
+
+        public ActionResult DeleteUser(int id)
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+            var user = userdb.Getbyid(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            userdb.Delete(id);
+            return RedirectToAction("User_Menu");
         }
 
 
@@ -519,6 +589,77 @@ namespace UI.Areas.Admin.Controllers
             return View(images);
         }
 
+
+        public ActionResult AddCarousel()
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+            IEnumerable<string> role = new List<string> { "carousel" , "poster1" ,  "poster2"};
+
+            var roleList = role.Select(c => new SelectListItem
+            {
+                Value = c,
+                Text = c
+            });
+
+            // Add the categoryListItems to the ViewData dictionary
+            ViewData["role_list"] = roleList;
+
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> NewCarousel(AddCarouselImage model, HttpPostedFileBase Image)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            byte[] imageBytes = null;
+            if (Image != null && Image.ContentLength > 0)
+            {
+
+                using (var binaryReader = new BinaryReader(Image.InputStream))
+                {
+                    imageBytes = binaryReader.ReadBytes(Image.ContentLength);
+                }
+            }
+
+            Carousel newimage = new Carousel();
+
+            newimage.heading = model.carousel.heading;
+            newimage.sub_heading = model.carousel.sub_heading;
+            newimage.carousel_role = model.carousel.carousel_role;
+            newimage.imageurl = imageBytes;
+            newimage.created_at = DateTime.Now;
+            carouseldb.Add(newimage);
+
+            // redirect to product list
+            return RedirectToAction("Featured_Images");
+        }
+
+
+        public ActionResult DeleteCarousel(int id)
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+            var image = carouseldb.GetbyId(id);
+            if (image == null)
+            {
+                return HttpNotFound();
+            }
+            carouseldb.Delete(id);
+            return RedirectToAction("Featured_Images");
+        }
 
 
         //--------------------------------NAVBAR CODE----------------------------------------------------
@@ -559,6 +700,13 @@ namespace UI.Areas.Admin.Controllers
     public class AddProductModel
     {
         public Product product { get; set; }
+        public HttpPostedFileBase Image { get; set; }
+    }
+
+
+    public class AddCarouselImage
+    {
+        public Carousel carousel { get; set; }
         public HttpPostedFileBase Image { get; set; }
     }
 }

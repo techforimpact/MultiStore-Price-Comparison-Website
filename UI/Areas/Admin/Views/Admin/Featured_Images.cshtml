@@ -5,45 +5,145 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+
+<div class="inSidebarContainer">
+    <div class="topnav">
+        <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
+        <a href="#news" class="material-symbols-outlined">notifications</a>
+        <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
+    </div>
+</div>
+
 <div class="mainPage">
 
-    <h2>Featured_Images</h2>
+    <h1>Featured Images @Html.ActionLink("Add Image", "AddCarousel", "Admin", new { area = "Admin" }, new { @class = "btn btn-primary" })</h1>
 
-    <div>
-        <h4>Carousel</h4>
+    <div class="container">
+        <br />
+        <h2>Carousel</h2>
         <hr />
+
+
         <div class="grid-container">
 
             @foreach (var item in Model)
             {
-                <div class="grid-item border border-dark">
-                    <a href="#">
-                        <div class="image-container border border-secondary">
-                            @{
-                                var base64 = Convert.ToBase64String(item.imageurl);
-                                var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
-                            }
-                            <img src="@imgSrc" alt="@item.carousel_role" />
-                        </div>
-                        <div class="product-info">
-                            <h3>@item.heading</h3>
-                            <p>@item.sub_heading</p>
-                            <p>@item.carousel_role</p>
-                            <div class="buttons">
-                                @Html.ActionLink("Edit", "EditCarousel", new { id = item.id }, new { @class = "material-symbols-outlined link" })
-                                @using (Html.BeginForm("DeleteFeatured", "Admin", new { id = item.id }, FormMethod.Post, new { @class = "link", onsubmit = "return confirm('Are you sure you want to delete this Featured Image?');" }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    <a class="material-symbols-outlined link" type="submit">Delete</a>
+                if (item.carousel_role == "carousel")
+                {
+                    <div class="grid-item border border-dark">
+                        <a href="#">
+                            <div class="image-container border border-secondary">
+                                @{
+                                    var base64 = Convert.ToBase64String(item.imageurl);
+                                    var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
                                 }
-
+                                <img src="@imgSrc" alt="@item.carousel_role" />
                             </div>
-                        </div>
-                    </a>
-                </div>
+                            <div class="product-info">
+                                <h3>@item.heading</h3>
+                                <p>@item.sub_heading</p>
+                                <div class="buttons">
+                                    <a href="@Url.Action("DeleteCarousel", new { id = item.id })" class="material-symbols-outlined link delete-product-link" data-confirm-message="Are you sure you want to delete this product?">Delete</a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <br />
+                    <br />
+                }
             }
 
 
         </div>
     </div>
+
+    <br />
+    <br />
+    <hr />
+    <br />
+
+
+    <div>
+        <h2>Poster 1</h2>
+        <hr />
+
+
+        <div class="grid-container">
+
+            @foreach (var item in Model)
+            {
+                if (item.carousel_role == "poster1")
+                {
+                    <div class="grid-item border border-dark">
+                        <a href="#">
+                            <div class="image-container border border-secondary">
+                                @{
+                                    var base64 = Convert.ToBase64String(item.imageurl);
+                                    var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                }
+                                <img src="@imgSrc" alt="@item.carousel_role" />
+                            </div>
+                            <div class="product-info">
+                                <h3>@item.heading</h3>
+                                <p>@item.sub_heading</p>
+                                <div class="buttons">
+                                    <a href="@Url.Action("DeleteCarousel", new { id = item.id })" class="material-symbols-outlined link delete-product-link" data-confirm-message="Are you sure you want to delete this product?">Delete</a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <br />
+                    <br />
+                }
+            }
+
+
+        </div>
+    </div>
+
+
+    <br />
+    <br />
+    <hr />
+    <br />
+
+
+    <div>
+        <h2>Poster 2</h2>
+        <hr />
+
+
+        <div class="grid-container">
+
+            @foreach (var item in Model)
+            {
+                if (item.carousel_role == "poster2")
+                {
+                    <div class="grid-item border border-dark">
+                        <a href="#">
+                            <div class="image-container border border-secondary">
+                                @{
+                                    var base64 = Convert.ToBase64String(item.imageurl);
+                                    var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                }
+                                <img src="@imgSrc" alt="@item.carousel_role" />
+                            </div>
+                            <div class="product-info">
+                                <h3>@item.heading</h3>
+                                <p>@item.sub_heading</p>
+                                <div class="buttons">
+                                    <a href="@Url.Action("DeleteCarousel", new { id = item.id })" class="material-symbols-outlined link delete-product-link" data-confirm-message="Are you sure you want to delete this product?">Delete</a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <br />
+                    <br />
+                }
+            }
+
+
+        </div>
+    </div>
+
 </div>
