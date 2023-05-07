@@ -385,6 +385,8 @@
     <Content Include="Areas\Common\Views\Default\SearchProduct.cshtml" />
     <Content Include="Areas\Common\Views\Default\Shops.cshtml" />
     <Content Include="Areas\Common\Views\Default\ShopDetail.cshtml" />
+    <Content Include="Areas\User\Views\User\EditUserPage.cshtml" />
+    <Content Include="Areas\User\Views\User\Wishlist.cshtml" />
     <None Include="Scripts\jquery-1.8.0.intellisense.js" />
     <Content Include="Scripts\contact.js" />
     <Content Include="Scripts\easing.min.js" />

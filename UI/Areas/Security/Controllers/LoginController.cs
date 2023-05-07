@@ -17,6 +17,7 @@ namespace UI.Areas.Security.Controllers
             userdb= new DAL_User();
         }
 
+
         // GET: Security/Login
         public ActionResult Index()
         {
@@ -58,6 +59,7 @@ namespace UI.Areas.Security.Controllers
                     var user = userdb.FindUser(username, password);
 
                     Session["CurrentUser"] = user;
+                    Session["dbContext"] = userdb;
                     // Redirect to user area
                     return RedirectToAction("Index", "User", new { controller = "User", area = "User" });
                 }
