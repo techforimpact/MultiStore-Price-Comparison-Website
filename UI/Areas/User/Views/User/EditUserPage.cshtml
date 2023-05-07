@@ -1,9 +1,9 @@
-﻿@model UI.Areas.User.StoresViewModel
-
+﻿
 @{
-    ViewBag.Title = "Shops";
+    ViewBag.Title = "EditUserPage";
     Layout = "~/Areas/User/Views/Shared/_Layout.cshtml";
 }
+
 
 <!-- Navbar Start -->
 <div class="container-fluid bg-dark mb-30">
@@ -43,7 +43,7 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a href="@Url.Action("Index")" class="nav-item nav-link">Home</a>
                         <a href="@Url.Action("Products")" class="nav-item nav-link">Products</a>
-                        <a href="@Url.Action("Shops")" class="nav-item nav-link active">Shops</a>
+                        <a href="@Url.Action("Shops")" class="nav-item nav-link">Shops</a>
                     </div>
                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                         <a href="@Url.Action("Wishlist")" class="btn px-0ml-3">
@@ -57,56 +57,41 @@
     </div>
 </div>
 <!-- Navbar End -->
-<!-- Breadcrumb Start -->
+<!-- Checkout Start -->
 <div class="container-fluid">
-    <div class="row px-xl-5">
-        <div class="col-12">
-            <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="@Url.Action("Index")">Home</a>
-                <span class="breadcrumb-item text-dark">Stores</span>
-            </nav>
-        </div>
-    </div>
-</div>
-<!-- Breadcrumb End -->
-<!-- Shop Start -->
-<div class="container-fluid">
-    <div class="row px-xl-5">
-        <!-- Shop Product Start -->
-        <div class="col-lg-9 col-md-8">
-            <div class="row pb-3">
-                <div class="col-12 pb-1">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-
-                        <div class="ml-2">
-                            <h3>Stores</h3>
+    @using (Html.BeginForm("EditUserPage", "User", FormMethod.Post, new { @class = "container-fluid" }))
+    {
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Edit Profile Details</span></h5>
+                <div class="container-fluid bg-light p-30 mb-5">
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            @Html.Label("Email")
+                            @Html.TextBox("email", null, new { @class = "form-control", placeholder = "example@email.com" })
+                        </div>
+                        <div class="col-md-12 form-group">
+                            @Html.Label("Current Password")
+                            @Html.Password("CurrentPassword", null, new { @class = "form-control", placeholder = "" })
+                        </div>
+                        <div class="col-md-12 form-group">
+                            @Html.Label("New Password")
+                            @Html.Password("NewPassword", null, new { @class = "form-control", placeholder = "" })
+                        </div>
+                        <div class="col-md-12 form-group">
+                            @Html.Label("Re-enter New Password")
+                            @Html.Password("ConfirmPassword", null, new { @class = "form-control", placeholder = "" })
+                        </div>
+                        <p class="form-group text-danger">@ViewBag.Message</p>
+                        <div class="col-md-12 text-right">
+                            <button class="btn btn-primary" type="submit">Reset Password</button>
                         </div>
                     </div>
                 </div>
-                @foreach (var item in Model.StoreImages)
-                {
-
-                    var base64 = Convert.ToBase64String(item.imageurl);
-                    var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
-                    <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
-
-                        <div class="product-item bg-light mb-4">
-                            <div class="product-img position-relative overflow-hidden">
-                                <img class="img-fluid w-100" src="@imgSrc" alt="">
-                                <div class="product-action">
-                                    <a class="btn btn-outline-dark btn-square" href="@Url.Action("ShopDetail" , "User", new { id = item.store_id })"><i class="fa fa-search"></i></a>
-                                </div>
-                            </div>
-                            <div class="text-center py-4">
-                                <a class="h6 text-decoration-none text-truncate" href="@Url.Action("ShopDetail" , "User" , new { id = item.store_id })">@item.Store.name</a>
-                            </div>
-                        </div>
-
-                    </div>
-                }
             </div>
         </div>
-        <!-- Shop Product End -->
-    </div>
+    }
+
 </div>
-<!-- Shop End -->
+
+<!-- Checkout End -->
