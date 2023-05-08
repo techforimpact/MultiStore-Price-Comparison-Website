@@ -26,6 +26,7 @@ namespace UI.Areas.Admin.Controllers
         private DAL_CategoryImages categoryimagedb;
         private DAL_User userdb;
         private DAL_Carousel carouseldb;
+        private DAL_Price pricesdb;
 
 
         public AdminController()
@@ -37,6 +38,7 @@ namespace UI.Areas.Admin.Controllers
             categoryimagedb= new DAL_CategoryImages();
             userdb = new DAL_User();
             carouseldb = new DAL_Carousel();
+            pricesdb = new DAL_Price();
         }
 
 
@@ -190,7 +192,17 @@ namespace UI.Areas.Admin.Controllers
         }
 
 
+        public ActionResult AddStoreProduct()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public ActionResult AddStoreProduct(Product newproduct)
+        {
+
+            return View();
+        }
 
         public ActionResult StoreDetails(int id)
         {
@@ -216,7 +228,7 @@ namespace UI.Areas.Admin.Controllers
             storeViewModel.State = store.state;
             storeViewModel.Country = store.country;
             storeViewModel.zipcode = store.zip_code;
-            storeViewModel.Products = productdb.GetStoreProducts(id);
+            storeViewModel.Products = pricesdb.GetAllByStore(id);
 
 
             return View(storeViewModel);
@@ -277,6 +289,35 @@ namespace UI.Areas.Admin.Controllers
         //------------------------PRODUCTS CODE----------------------------------------------------------
 
 
+        public ActionResult ProductDetail(int id)
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+
+            var prod = productdb.Getbyid(id);
+            if (prod == null)
+            {
+                return HttpNotFound();
+            }
+
+            ProductDetailModel model = new ProductDetailModel();
+
+            model.Product = prod;
+            model.Prices = pricesdb.GetAllByProduct(id);
+            model.StoreImages = storeimagedb.GetAll();
+
+            List<Category> categories = categorydb.GetAll().ToList();
+
+            ViewBag.Categories = categorydb.GetSubcategories(categories);
+
+
+            return View(model);
+        }
+
+
         public ActionResult Products(string searchString)
         {
             if (Session["AdminUserName"] == null)
@@ -333,15 +374,9 @@ namespace UI.Areas.Admin.Controllers
                 Text = c.name
             });
 
-            var storeListItems = stores.Select(c => new SelectListItem
-            {
-                Value = c.id.ToString(),
-                Text = c.name
-            });
 
             // Add the categoryListItems to the ViewData dictionary
             ViewData["category_id"] = categoryListItems;
-            ViewData["store_id"] = storeListItems;
 
             return View();
         }
@@ -370,8 +405,6 @@ namespace UI.Areas.Admin.Controllers
 
             newproduct.name = model.product.name;
             newproduct.description = model.product.description;
-            newproduct.price = model.product.price;
-            newproduct.store_id= model.product.store_id;
             newproduct.category_id = model.product.category_id;
             newproduct.image = imageBytes;
             newproduct.created_at = DateTime.Now;
@@ -701,6 +734,13 @@ namespace UI.Areas.Admin.Controllers
     {
         public Product product { get; set; }
         public HttpPostedFileBase Image { get; set; }
+    }
+
+    public class ProductDetailModel
+    {
+        public Product Product { get; set; }
+        public IEnumerable<Price> Prices { get; set; }
+        public IEnumerable<StoreImage> StoreImages { get; set; }
     }
 
 

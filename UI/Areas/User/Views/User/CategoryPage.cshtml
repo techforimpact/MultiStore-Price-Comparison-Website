@@ -149,9 +149,9 @@
                                 </div>
                             </div>
                             <div class="text-center py-4">
-                                <a class="h6 text-decoration-none text-truncate" href="">@item.name</a>
+                                <a class="h6 text-decoration-none text-truncate" href="@Url.Action("ProductDetail", new { id = item.id })">@item.name</a>
                                 <div class="d-flex align-items-center justify-content-center mt-2">
-                                    <h5>Starting from SAR @Convert.ToInt32(item.price)</h5><br />
+                                    <h5>Starting from SAR @Model.Prices.Where(c => c.product_id == item.id).OrderBy(price => price.price1).First().price1</h5><br />
                                 </div>
                             </div>
                         </div>

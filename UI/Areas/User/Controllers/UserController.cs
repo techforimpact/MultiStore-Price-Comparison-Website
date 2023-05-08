@@ -78,6 +78,7 @@ namespace UI.Areas.User
             model.StoreImages = storeimagedb.GetAll();
             model.FilteredProducts = productdb.GetAll();
             model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
+            model.Prices = pricesdb.GetAll();
 
             model.FilteredProducts = model.FilteredProducts.Where(p => p.created_at > DateTime.Now.AddMonths(-1));
             model.User = user;
@@ -132,13 +133,15 @@ namespace UI.Areas.User
             model.Category = categorydb.Getbyid(categoryId);
             model.CategoryImage = categoryimagedb.Get(categoryId);
             model.Products = productdb.GetAll();
+            model.Prices = pricesdb.GetAll();
+
 
             List<Category> categories = categorydb.GetAll().ToList();
             var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
             ViewBag.WishlistCount = wishcount;
             ViewBag.Categories = categorydb.GetSubcategories(categories);
             ViewBag.Username = currentUser.name;
-            
+
 
             return View(model);
         }
@@ -163,6 +166,7 @@ namespace UI.Areas.User
             SearchProductModelView model = new SearchProductModelView();
             model.Products = productdb.GetAll();
             model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
+            model.Prices = pricesdb.GetAll();
 
 
             List<Category> categories = categorydb.GetAll().ToList();
@@ -202,10 +206,11 @@ namespace UI.Areas.User
 
             ProductDetailModelView model = new ProductDetailModelView();
 
-            model.FilteredProducts = productdb.GetAll().Where(p => p.created_at > DateTime.Now.AddMonths(-1));
+            model.FilteredProducts = productdb.GetAll().Where(p => p.created_at > DateTime.Now.AddMonths(-1)).Where(c => c.id != id);
             model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
             model.Product = prod;
-            model.Prices = pricesdb.GetAllByProduct(id);
+            model.Prices = pricesdb.GetAll();
+            model.StoreImages = storeimagedb.GetAll();
 
             List<Category> categories = categorydb.GetAll().ToList();
             var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
@@ -238,6 +243,8 @@ namespace UI.Areas.User
 
             model.Products = productdb.SearchProducts(searchTerm);
             model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
+            model.Prices = pricesdb.GetAll();
+
 
             if (model.Products == null)
             {
@@ -318,8 +325,9 @@ namespace UI.Areas.User
             StoreDetailModelView model = new StoreDetailModelView();
 
             model.Store = shop;
-            model.Products = productdb.GetStoreProducts(id);
+            model.Products = pricesdb.GetAllByStore(id);
             model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
+            model.Prices = pricesdb.GetAll();
 
 
             List<Category> categories = categorydb.GetAll().ToList();
@@ -574,6 +582,7 @@ namespace UI.Areas.User
         public IEnumerable<StoreImage> StoreImages { get; set; }
         public IEnumerable<CategoryImage> CategoryImages { get; set; }
         public IEnumerable<Wishlist> Wishlist { get; set; }
+        public IEnumerable<Price> Prices { get; set; }
     }
 
     public class CategoryViewModel
@@ -582,6 +591,8 @@ namespace UI.Areas.User
         public CategoryImage CategoryImage { get; set; }
         public IEnumerable<Product> Products { get; set; }
         public IEnumerable<Wishlist> Wishlist { get; set; }
+        public IEnumerable<Price> Prices { get; set; }
+
     }
 
     public class ProductDetailViewModel
@@ -589,6 +600,8 @@ namespace UI.Areas.User
         public Product Product { get; set;}
         public IEnumerable<Product> FilteredProducts { get; set; }
         public IEnumerable<Wishlist> Wishlist { get; set; }
+        public IEnumerable<Price> Prices { get; set; }
+
     }
 
     public class StoresViewModel
@@ -603,6 +616,8 @@ namespace UI.Areas.User
         public Store Store { get; set; }
         public IEnumerable<Product> Products { get; set; }
         public IEnumerable<Wishlist> Wishlist { get; set; }
+        public IEnumerable<Price> Prices { get; set; }
+
     }
 
     public class ProductDetailModelView
@@ -613,6 +628,9 @@ namespace UI.Areas.User
         public IEnumerable<Product> FilteredProducts { get; set; }
         public IEnumerable<Wishlist> Wishlist { get; set; }
 
+        public IEnumerable<StoreImage> StoreImages { get; set; }
+
+
     }
 
     public class SearchProductModelView
@@ -620,5 +638,7 @@ namespace UI.Areas.User
         public IEnumerable<Product> Products { get; set; }
 
         public IEnumerable<Wishlist> Wishlist { get; set; }
+        public IEnumerable<Price> Prices { get; set; }
+
     }
 }

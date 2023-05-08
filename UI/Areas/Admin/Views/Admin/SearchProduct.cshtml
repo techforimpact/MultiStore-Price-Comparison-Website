@@ -45,8 +45,6 @@
                         <div class="product-info">
                             <h3>@item.name</h3>
                             <p>@item.Category.name</p>
-                            <p>SAR @item.price.ToString()</p>
-                            <p>@item.Store.name</p>
                             <div class="buttons">
 
                                 @Html.ActionLink("Edit", "EditProduct", new { id = item.id }, new { @class = "material-symbols-outlined link" })

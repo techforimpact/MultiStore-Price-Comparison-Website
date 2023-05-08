@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MultiStoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MultiStoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Carousel">
           <Key>
             <PropertyRef Name="id" />
@@ -35,7 +35,8 @@
         </EntityType>
         <EntityType Name="Prices">
           <Key>
-            <PropertyRef Name="id" />
+            <PropertyRef Name="product_id" />
+            <PropertyRef Name="store_id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="product_id" Type="int" Nullable="false" />
@@ -52,8 +53,6 @@
           <Property Name="category_id" Type="int" Nullable="false" />
           <Property Name="description" Type="text" />
           <Property Name="image" Type="image" />
-          <Property Name="price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="store_id" Type="int" Nullable="false" />
           <Property Name="created_at" Type="datetime2" Precision="0" />
         </EntityType>
         <EntityType Name="StoreImage">
@@ -149,20 +148,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Products__store___36B12243">
-          <End Role="Stores" Type="Self.Stores" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Products" Type="Self.Products" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Stores">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Products">
-              <PropertyRef Name="store_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__StoreImag__store__5DCAEF64">
           <End Role="Stores" Type="Self.Stores" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -229,10 +214,6 @@
             <End Role="Categories" EntitySet="Categories" />
             <End Role="Products" EntitySet="Products" />
           </AssociationSet>
-          <AssociationSet Name="FK__Products__store___36B12243" Association="Self.FK__Products__store___36B12243">
-            <End Role="Stores" EntitySet="Stores" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
           <AssociationSet Name="FK__StoreImag__store__5DCAEF64" Association="Self.FK__StoreImag__store__5DCAEF64">
             <End Role="Stores" EntitySet="Stores" />
             <End Role="StoreImage" EntitySet="StoreImage" />
@@ -246,7 +227,8 @@
             <End Role="Wishlists" EntitySet="Wishlists" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MultiStoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -257,8 +239,8 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="heading" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="sub_heading" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="imageurl" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <Property Name="created_at" Type="DateTime" Precision="3" Nullable="false" />
+          <Property Name="imageurl" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="carousel_role" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityType Name="Category">
@@ -283,7 +265,8 @@
         </EntityType>
         <EntityType Name="Price">
           <Key>
-            <PropertyRef Name="id" />
+            <PropertyRef Name="product_id" />
+            <PropertyRef Name="store_id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="product_id" Type="Int32" Nullable="false" />
@@ -302,12 +285,9 @@
           <Property Name="category_id" Type="Int32" Nullable="false" />
           <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="image" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="store_id" Type="Int32" Nullable="false" />
           <Property Name="created_at" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Category" Relationship="Self.FK__Products__catego__37A5467C" FromRole="Products" ToRole="Categories" />
           <NavigationProperty Name="Prices" Relationship="Self.FK__Prices__product___0D7A0286" FromRole="Products" ToRole="Prices" />
-          <NavigationProperty Name="Store" Relationship="Self.FK__Products__store___36B12243" FromRole="Products" ToRole="Stores" />
           <NavigationProperty Name="Wishlists" Relationship="Self.FK__Wishlists__produ__47DBAE45" FromRole="Products" ToRole="Wishlists" />
         </EntityType>
         <EntityType Name="StoreImage">
@@ -316,7 +296,7 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="store_id" Type="Int32" Nullable="false" />
-          <Property Name="imageurl" Type="Binary" FixedLength="false" MaxLength="Max" />
+          <Property Name="imageurl" Type="Binary" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="Store" Relationship="Self.FK__StoreImag__store__5DCAEF64" FromRole="StoreImage" ToRole="Stores" />
         </EntityType>
         <EntityType Name="Store">
@@ -332,7 +312,6 @@
           <Property Name="zip_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="created_at" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Prices" Relationship="Self.FK__Prices__store_id__0E6E26BF" FromRole="Stores" ToRole="Prices" />
-          <NavigationProperty Name="Products" Relationship="Self.FK__Products__store___36B12243" FromRole="Stores" ToRole="Products" />
           <NavigationProperty Name="StoreImages" Relationship="Self.FK__StoreImag__store__5DCAEF64" FromRole="Stores" ToRole="StoreImage" />
         </EntityType>
         <EntityType Name="User">
@@ -410,20 +389,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Products__store___36B12243">
-          <End Role="Stores" Type="Self.Store" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Products" Type="Self.Product" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Stores">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Products">
-              <PropertyRef Name="store_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__Wishlists__produ__47DBAE45">
           <End Role="Products" Type="Self.Product" Multiplicity="1" />
           <End Role="Wishlists" Type="Self.Wishlist" Multiplicity="*" />
@@ -490,10 +455,6 @@
             <End Role="Stores" EntitySet="Stores" />
             <End Role="Prices" EntitySet="Prices" />
           </AssociationSet>
-          <AssociationSet Name="FK__Products__store___36B12243" Association="Self.FK__Products__store___36B12243">
-            <End Role="Stores" EntitySet="Stores" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
           <AssociationSet Name="FK__Wishlists__produ__47DBAE45" Association="Self.FK__Wishlists__produ__47DBAE45">
             <End Role="Products" EntitySet="Products" />
             <End Role="Wishlists" EntitySet="Wishlists" />
@@ -516,10 +477,10 @@
           <EntitySetMapping Name="Carousels">
             <EntityTypeMapping TypeName="MultiStoreModel.Carousel">
               <MappingFragment StoreEntitySet="Carousel">
-                <ScalarProperty Name="imageurl" ColumnName="imageurl" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="heading" ColumnName="heading" />
                 <ScalarProperty Name="sub_heading" ColumnName="sub_heading" />
+                <ScalarProperty Name="imageurl" ColumnName="imageurl" />
                 <ScalarProperty Name="created_at" ColumnName="created_at" />
                 <ScalarProperty Name="carousel_role" ColumnName="carousel_role" />
               </MappingFragment>
@@ -563,8 +524,6 @@
                 <ScalarProperty Name="category_id" ColumnName="category_id" />
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="image" ColumnName="image" />
-                <ScalarProperty Name="price" ColumnName="price" />
-                <ScalarProperty Name="store_id" ColumnName="store_id" />
                 <ScalarProperty Name="created_at" ColumnName="created_at" />
               </MappingFragment>
             </EntityTypeMapping>

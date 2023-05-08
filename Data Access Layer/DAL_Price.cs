@@ -30,6 +30,13 @@ namespace Data_Access_Layer
             return prices;
         }
 
+        public IEnumerable<Product> GetAllByStore(int id)
+        {
+            var prices = GetAll().Where(c => c.store_id == id).Select( c => c.Product);
+
+            return prices;
+        }
+
         public Price Getbyid(int id)
         {
             return db.Prices.Find(id);

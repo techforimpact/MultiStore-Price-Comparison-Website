@@ -46,7 +46,7 @@
             @foreach (var item in Model)
             {
                 <div class="grid-item border border-dark">
-                    <a href="#">
+                    <a href="@Url.Action("ProductDetail" , "Admin" , new {id = item.id})">
                         <div class="image-container border border-secondary">
                             @{
                                 if (item.image != null) {
@@ -62,8 +62,6 @@
                         <div class="product-info">
                             <h3>@item.name</h3>
                             <p>@item.Category.name</p>
-                            <p>@item.price.ToString()</p>
-                            <p>@item.Store.name</p>
                             <div class="buttons">
 
                                 @Html.ActionLink("Edit", "EditProduct", new { id = item.id }, new { @class = "material-symbols-outlined link" })

@@ -26,14 +26,11 @@ namespace Object_Layer
         public int category_id { get; set; }
         public string description { get; set; }
         public byte[] image { get; set; }
-        public decimal price { get; set; }
-        public int store_id { get; set; }
         public Nullable<System.DateTime> created_at { get; set; }
     
         public virtual Category Category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Price> Prices { get; set; }
-        public virtual Store Store { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Wishlist> Wishlists { get; set; }
     }

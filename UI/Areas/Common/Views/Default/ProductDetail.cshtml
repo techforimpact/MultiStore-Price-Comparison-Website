@@ -22,7 +22,7 @@
                             <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
                                 @foreach (var subcategory in ((IEnumerable<Object_Layer.Category>)ViewBag.Categories).Where(c => c.parent_id == category.id))
                                 {
-                                    <a href="@Url.Action("CategoryPage", "User", new { categoryId = subcategory.id })" class="dropdown-item">@subcategory.name</a>
+                                    <a href="@Url.Action("CategoryPage", "Default", new { categoryId = subcategory.id })" class="dropdown-item">@subcategory.name</a>
                                 }
                             </div>
                         </div>
@@ -48,7 +48,6 @@
                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                         <a href="@Url.Action("Wishlist")" class="btn px-0ml-3">
                             <i class="fas fa-heart text-primary"></i>
-                            <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                         </a>
                     </div>
                 </div>
@@ -75,7 +74,7 @@
 <!-- Shop Detail Start -->
 <div class="container-fluid pb-5">
     <div class="row px-xl-5">
-        <div class="col-lg-5 mb-30">
+        <div class="col-lg-5 mb-30 bg-white">
             <div id="product-carousel" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner bg-light">
 
@@ -101,44 +100,48 @@
             <div class="h-100 bg-light p-30">
                 <h3>@Model.Product.name</h3>
 
-                <h3 class="font-weight-semi-bold mb-4">SAR @Model.Prices.FirstOrDefault().price1</h3>
-
-
-
-                <div class="d-flex align-items-center mb-4 pt-2">
-                    <div class="input-group quantity mr-3" style="width: 130px;">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-minus">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                        </div>
-                        <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-plus">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
+                <div class="container">
+                    <div class="parent-container">
+                        @foreach (var item in Model.Prices.Where(c => c.product_id == Model.Product.id).OrderBy(c => c.price1))
+                        {
+                            var basic = Convert.ToBase64String(Model.StoreImages.Where(c => c.store_id == item.store_id).First().imageurl);
+                            var img = string.Format("data:image/jpg;base64,{0}", basic);
+                            <div class="sub-container">
+                                <img src="@img" alt="Product Image" class="product-image">
+                                <div class="product-details">
+                                    <div class="name">@item.Store.name</div>
+                                    <div class="price">SR @item.price1</div>
+                                </div>
+                            </div>
+                        }
+                        <!-- Add more sub-containers as needed -->
                     </div>
+                </div>
+
+
+
+
+                <div class="d-flex align-items-center justify-content-between mb-2 mt-2 ml-3 pt-2">
                     <a class="btn btn-primary px-3" href="#">
                         <i class="fa fa-heart mr-1"></i> Add To
                         Wishlist
                     </a>
-                </div>
-                <div class="d-flex pt-2">
-                    <strong class="text-dark mr-2">Share on:</strong>
-                    <div class="d-inline-flex">
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-pinterest"></i>
-                        </a>
+                    <div>
+                        <strong class="mr-2">Share on:</strong>
+                        <div class="d-inline-flex">
+                            <a class="px-2" href="">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a class="px-2" href="">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a class="px-2" href="">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a class="px-2" href="">
+                                <i class="fab fa-pinterest"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,7 +151,7 @@
         <div class="col">
             <div class="bg-light p-30">
                 <div class="nav nav-tabs mb-4">
-                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Description</a>
+                    <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
@@ -184,7 +187,7 @@
                     <div class="text-center py-4">
                         <a class="h6 text-decoration-none text-truncate" href="">@item.name</a>
                         <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5>$@item.price</h5>
+                            <h5>SR @Model.Prices.Where(c => c.product_id == item.id).OrderBy(price => price.price1).First().price1</h5>
                         </div>
                     </div>
                 </div>

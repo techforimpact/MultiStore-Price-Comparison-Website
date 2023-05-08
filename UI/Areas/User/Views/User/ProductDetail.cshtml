@@ -103,90 +103,17 @@
 
                 <div class="container">
                     <div class="parent-container">
+                        @foreach(var item in Model.Prices.Where(c => c.product_id == Model.Product.id).OrderBy(c => c.price1)) {
+                            var basic = Convert.ToBase64String(Model.StoreImages.Where(c => c.store_id == item.store_id).First().imageurl);
+                            var img = string.Format("data:image/jpg;base64,{0}", basic);
                         <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
+                            <img src="@img" alt="Product Image" class="product-image">
                             <div class="product-details">
-                                <div class="name">Product 1</div>
-                                <div class="price">$10</div>
+                                <div class="name">@item.Store.name</div>
+                                <div class="price">@item.price1</div>
                             </div>
                         </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 2</div>
-                                <div class="price">$15</div>
-                            </div>
-                        </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 3</div>
-                                <div class="price">$20</div>
-                            </div>
-                        </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 4</div>
-                                <div class="price">$25</div>
-                            </div>
-                        </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 1</div>
-                                <div class="price">$10</div>
-                            </div>
-                        </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 2</div>
-                                <div class="price">$15</div>
-                            </div>
-                        </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 3</div>
-                                <div class="price">$20</div>
-                            </div>
-                        </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 4</div>
-                                <div class="price">$25</div>
-                            </div>
-                        </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 1</div>
-                                <div class="price">$10</div>
-                            </div>
-                        </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 2</div>
-                                <div class="price">$15</div>
-                            </div>
-                        </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 3</div>
-                                <div class="price">$20</div>
-                            </div>
-                        </div>
-                        <div class="sub-container">
-                            <img src="@Url.Content("~/Images/vendor-8.jpg")" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">Product 4</div>
-                                <div class="price">$25</div>
-                            </div>
-                        </div>
+                        }
                         <!-- Add more sub-containers as needed -->
                     </div>
                 </div>
@@ -266,7 +193,7 @@
                     <div class="text-center py-4">
                         <a class="h6 text-decoration-none text-truncate" href="">@item.name</a>
                         <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5>Starting from SR @item.price</h5>
+                            <h5>Starting from SR @Model.Prices.Where(c => c.product_id == item.id).OrderBy(price => price.price1).First().price1</h5>
                         </div>
                     </div>
                 </div>

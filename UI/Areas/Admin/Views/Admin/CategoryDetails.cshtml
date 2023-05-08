@@ -58,8 +58,6 @@
                     <div class="product-info">
                         <h3>@item.name<br /></h3>
                         <p>@item.Category.name</p><br />
-                        <p>@item.price.ToString()</p><br />
-                        <p>@item.Store.name</p><br />
                         <div class="buttons">
                             @Html.ActionLink("Edit", "EditProduct", new { id = item.id }, new { @class = "material-symbols-outlined link" })
                             <a href="@Url.Action("DeleteProduct", new { id = item.id })" class="material-symbols-outlined link delete-product-link" data-confirm-message="Are you sure you want to delete this product?">Delete</a>

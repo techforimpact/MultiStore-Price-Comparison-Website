@@ -1,0 +1,76 @@
+﻿@model UI.Areas.Admin.Controllers.ProductDetailModel
+
+@{
+    ViewBag.Title = "ProductDetail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="inSidebarContainer">
+    <div class="topnav">
+        <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
+        <a href="#news" class="material-symbols-outlined">notifications</a>
+        <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
+    </div>
+</div>
+
+
+
+<div class="mainPage">
+
+
+    <!-- Shop Detail Start -->
+    <div class="container-fluid pb-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-5 mb-30 bg-white">
+                <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner bg-light">
+
+                        @{ var base64 = Convert.ToBase64String(Model.Product.image);
+                            var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
+
+                            <div class="carousel-item active">
+                                <img class="w-100 h-100" src="@imgSrc" alt="Image">
+                            </div>
+                        }
+
+                    </div>
+                    <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+                        <i class="fa fa-2x fa-angle-left text-dark"></i>
+                    </a>
+                    <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+                        <i class="fa fa-2x fa-angle-right text-dark"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-7 h-auto mb-30">
+                <div class="h-100 bg-light p-30">
+                    <h3>@Model.Product.name</h3>
+
+                    <div class="container">
+                        <div class="parent-container">
+                            @foreach (var item in Model.Prices.Where(c => c.product_id == Model.Product.id).OrderBy(c => c.price1))
+                            {
+                                var basic = Convert.ToBase64String(Model.StoreImages.Where(c => c.store_id == item.store_id).First().imageurl);
+                                var img = string.Format("data:image/jpg;base64,{0}", basic);
+                                <div class="sub-container">
+                                    <img src="@img" alt="Product Image" class="product-image">
+                                    <div class="product-details">
+                                        <div class="name">@item.Store.name</div>
+                                        <div class="price">SR @item.price1</div>
+                                    </div>
+                                </div>
+                            }
+                            <!-- Add more sub-containers as needed -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Shop Detail End -->
+
+
+
+</div>

@@ -18,7 +18,6 @@ namespace Object_Layer
         public Store()
         {
             this.Prices = new HashSet<Price>();
-            this.Products = new HashSet<Product>();
             this.StoreImages = new HashSet<StoreImage>();
         }
     
@@ -33,8 +32,6 @@ namespace Object_Layer
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Price> Prices { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Product> Products { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StoreImage> StoreImages { get; set; }
     }

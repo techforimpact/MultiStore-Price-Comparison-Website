@@ -22,7 +22,7 @@
                             <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
                                 @foreach (var subcategory in ((IEnumerable<Object_Layer.Category>)ViewBag.Categories).Where(c => c.parent_id == category.id))
                                 {
-                                    <a href="@Url.Action("CategoryPage", "User", new { categoryId = subcategory.id })" class="dropdown-item">@subcategory.name</a>
+                                    <a href="@Url.Action("CategoryPage", "Default", new { categoryId = subcategory.id })" class="dropdown-item">@subcategory.name</a>
                                 }
                             </div>
                         </div>
@@ -48,7 +48,6 @@
                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                         <a href="@Url.Action("Wishlist")" class="btn px-0ml-3">
                             <i class="fas fa-heart text-primary"></i>
-                            <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                         </a>
                     </div>
                 </div>
@@ -142,7 +141,7 @@
                             <div class="text-center py-4">
                                 <a class="h6 text-decoration-none text-truncate" href="@Url.Action("ProductDetail", new { id = item.id })">@item.name</a>
                                 <div class="d-flex align-items-center justify-content-center mt-2">
-                                    <h5>Starting from SAR @Convert.ToInt32(item.price)</h5><br />
+                                    <h5>Starting from SAR @Model.Prices.Where(c => c.product_id == item.id).OrderBy(price => price.price1).First().price1</h5><br />
                                 </div>
                             </div>
                         </div>

@@ -69,13 +69,6 @@ namespace Data_Access_Layer
 
         }
 
-        public IEnumerable<Product> GetStoreProducts(int id)
-        {
-            var products = db.Products.Where(p => p.store_id == id).ToList();
-
-            return products;
-        }
-
 
         public IEnumerable<Product> GetCategoryProducts(int id)
         {
