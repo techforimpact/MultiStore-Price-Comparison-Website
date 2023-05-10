@@ -27,9 +27,10 @@ namespace UI.Areas.User
         private DAL_StoreImages storeimagedb;
         private DAL_Price pricesdb;
         private DAL_User userdb;
+        private DAL_Location locationdb;
         private Object_Layer.User currentUser;
-/*        private DAL_User userdb;
-        private Object_Layer.User sessionUser;*/
+        /*        private DAL_User userdb;
+                private Object_Layer.User sessionUser;*/
 
         public UserController()
         {
@@ -42,12 +43,13 @@ namespace UI.Areas.User
             storeimagedb = new DAL_StoreImages();
             pricesdb = new DAL_Price();
             userdb = new DAL_User();
+            locationdb = new DAL_Location();
             currentUser = null;
 
-/*            string customerId = TempData["customerId"].ToString();
+            /*            string customerId = TempData["customerId"].ToString();
 
 
-            sessionUser = userdb.Getbyid(Convert.ToInt32(customerId));*/
+                        sessionUser = userdb.Getbyid(Convert.ToInt32(customerId));*/
 
         }
         // GET: User/User
@@ -62,7 +64,7 @@ namespace UI.Areas.User
                 currentUser = user;
             }
 
-            if (currentUser== null)
+            if (currentUser == null)
             {
                 return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
             }
@@ -72,7 +74,7 @@ namespace UI.Areas.User
 
             model.Products = productdb.GetAll();
             model.Categories = categorydb.GetAll();
-            model.Stores= storedb.GetAll();
+            model.Stores = storedb.GetAll();
             model.Carousel = carouseldb.GetAll();
             model.CategoryImages = categoryimagedb.GetAll();
             model.StoreImages = storeimagedb.GetAll();
@@ -124,7 +126,7 @@ namespace UI.Areas.User
             var category = categorydb.Getbyid(categoryId);
             if (category == null)
             {
-                return RedirectToAction("Index" , "User");
+                return RedirectToAction("Index", "User");
             }
 
             CategoryViewModel model = new CategoryViewModel();
@@ -199,7 +201,7 @@ namespace UI.Areas.User
 
 
             var prod = productdb.Getbyid(id);
-            if(prod == null)
+            if (prod == null)
             {
                 return HttpNotFound();
             }
@@ -316,11 +318,13 @@ namespace UI.Areas.User
 
 
             var shop = storedb.Getbyid(id);
-            if(shop == null)
+            if (shop == null)
             {
                 return HttpNotFound();
             }
 
+
+            var locations = locationdb.GetAll().Where(c=> c.store_id == shop.id);
 
             StoreDetailModelView model = new StoreDetailModelView();
 
@@ -328,6 +332,13 @@ namespace UI.Areas.User
             model.Products = pricesdb.GetAllByStore(id);
             model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
             model.Prices = pricesdb.GetAll();
+
+            model.Locations = locations.Select(store => new StoreMapViewModel
+            {
+                Name = store.Store.name,
+                Latitude = store.latitude,
+                Longitude = store.longitude
+            }).ToList();
 
 
             List<Category> categories = categorydb.GetAll().ToList();
@@ -587,7 +598,7 @@ namespace UI.Areas.User
 
     public class CategoryViewModel
     {
-        public Category Category { get; set;}
+        public Category Category { get; set; }
         public CategoryImage CategoryImage { get; set; }
         public IEnumerable<Product> Products { get; set; }
         public IEnumerable<Wishlist> Wishlist { get; set; }
@@ -597,7 +608,7 @@ namespace UI.Areas.User
 
     public class ProductDetailViewModel
     {
-        public Product Product { get; set;}
+        public Product Product { get; set; }
         public IEnumerable<Product> FilteredProducts { get; set; }
         public IEnumerable<Wishlist> Wishlist { get; set; }
         public IEnumerable<Price> Prices { get; set; }
@@ -617,6 +628,8 @@ namespace UI.Areas.User
         public IEnumerable<Product> Products { get; set; }
         public IEnumerable<Wishlist> Wishlist { get; set; }
         public IEnumerable<Price> Prices { get; set; }
+
+        public IEnumerable<StoreMapViewModel> Locations { get; set; }
 
     }
 
@@ -640,5 +653,12 @@ namespace UI.Areas.User
         public IEnumerable<Wishlist> Wishlist { get; set; }
         public IEnumerable<Price> Prices { get; set; }
 
+    }
+
+    public class StoreMapViewModel
+    {
+        public string Name { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
     }
 }

@@ -122,7 +122,7 @@
 
 
                 <div class="d-flex align-items-center justify-content-between mb-2 mt-2 ml-3 pt-2">
-                    <a class="btn btn-primary px-3" href="#">
+                    <a class="btn btn-primary px-3" href="@Url.Action("Wishlist")">
                         <i class="fa fa-heart mr-1"></i> Add To
                         Wishlist
                     </a>
@@ -179,8 +179,7 @@
                     <div class="product-img position-relative overflow-hidden">
                         <img class="img-fluid w-100" src="@Url.Content(img)" alt="">
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href="@Url.Action("Wishlist")"><i class="far fa-heart"></i></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
                         </div>
                     </div>

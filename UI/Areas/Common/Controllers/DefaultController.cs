@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Optimization;
 
 namespace UI.Areas.Common.Controllers
 {
@@ -19,6 +20,7 @@ namespace UI.Areas.Common.Controllers
         private DAL_CategoryImages categoryimagedb;
         private DAL_StoreImages storeimagedb;
         private DAL_Price pricesdb;
+        private DAL_Location locationdb;
         /*        private DAL_User userdb;
                 private Object_Layer.User sessionUser;*/
 
@@ -32,7 +34,7 @@ namespace UI.Areas.Common.Controllers
             categoryimagedb = new DAL_CategoryImages();
             storeimagedb = new DAL_StoreImages();
             pricesdb = new DAL_Price();
-
+            locationdb = new DAL_Location();
             /*            string customerId = TempData["customerId"].ToString();
 
 
@@ -303,12 +305,20 @@ namespace UI.Areas.Common.Controllers
                 return HttpNotFound();
             }
 
-
+            var locations = locationdb.GetAll().Where(c => c.store_id == shop.id);
+                
             StoreDetailModelView model = new StoreDetailModelView();
 
             model.Store = shop;
             model.Products = pricesdb.GetAllByStore(id);
             model.Prices = pricesdb.GetAll();
+
+            model.Locations = locations.Select(store => new StoreMapViewModel
+            {
+                Name = store.Store.name,
+                Latitude = store.latitude,
+                Longitude = store.longitude
+            }).ToList();
 
 
             List<Category> categories = categorydb.GetAll().ToList();
@@ -368,6 +378,7 @@ namespace UI.Areas.Common.Controllers
         public Store Store { get; set; }
         public IEnumerable<Product> Products { get; set; }
         public IEnumerable<Price> Prices { get; set; }
+        public IEnumerable<StoreMapViewModel> Locations { get; set; }
     }
 
     public class ProductDetailModelView
@@ -382,5 +393,12 @@ namespace UI.Areas.Common.Controllers
     {
         public IEnumerable<Product> Products { get; set;}
         public IEnumerable<Price> Prices { get; set;}
+    }
+
+    public class StoreMapViewModel
+    {
+        public string Name { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
     }
 }

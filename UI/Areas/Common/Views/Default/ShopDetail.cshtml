@@ -69,49 +69,89 @@
     </div>
 </div>
 <!-- Breadcrumb End -->
+
+
 <!-- Shop Start -->
 <div class="container-fluid">
     <div class="row px-xl-5">
-        <!-- Shop Sidebar Start -->
-        <div class="col-lg-3 col-md-4">
-            <!-- Price Start -->
-            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by price</span></h5>
-            <div class="bg-light p-4 mb-30">
-                @using (Html.BeginForm("FilterByPrice", "User", FormMethod.Post))
-                {
-                    <!-- Checkbox options for price ranges -->
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        @Html.CheckBox("price-range", true, new { @class = "custom-control-input", id = "price-all" })
-                        @Html.Label("price-all", "All Price", new { @class = "custom-control-label" })
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        @Html.CheckBox("price-range", false, new { @class = "custom-control-input", id = "price-1" })
-                        @Html.Label("price-1", "$0 - $100", new { @class = "custom-control-label" })
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        @Html.CheckBox("price-range", false, new { @class = "custom-control-input", id = "price-2" })
-                        @Html.Label("price-2", "$100 - $200", new { @class = "custom-control-label" })
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        @Html.CheckBox("price-range", false, new { @class = "custom-control-input", id = "price-3" })
-                        @Html.Label("price-3", "$200 - $300", new { @class = "custom-control-label" })
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        @Html.CheckBox("price-range", false, new { @class = "custom-control-input", id = "price-4" })
-                        @Html.Label("price-4", "$300 - $400", new { @class = "custom-control-label" })
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        @Html.CheckBox("price-range", false, new { @class = "custom-control-input", id = "price-5" })
-                        @Html.Label("price-5", "$400 - $500", new { @class = "custom-control-label" })
-                    </div>
-                    <br />
-                    <button class="btn btn-primary" type="submit">Apply Filter</button>
-                }
+
+
+        <div class="col-lg-5 mb-30 bg-white">
+            <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner bg-light">
+
+                    @{ var base64 = Convert.ToBase64String(Model.Store.StoreImages.First().imageurl);
+                        var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
+
+                        <div class="carousel-item active">
+                            <img class="w-100 h-100" src="@imgSrc" alt="Image">
+                        </div>
+                    }
+
+                </div>
 
             </div>
-            <!-- Price End -->
         </div>
-        <!-- Shop Sidebar End -->
+
+        <div class="col-lg-7 h-auto mb-30">
+            <div class="h-100 bg-light p-30">
+                <h3><p>@Model.Store.name</p></h3>
+                <h5>Address :</h5><p> @Model.Store.address , @Model.Store.city , @Model.Store.state , @Model.Store.country </p>
+                
+
+                                  <div class="container">
+                                      <div id="map" style="height: 400px;"></div>
+
+                                      <script>
+                                        function initMap() {
+                                            var mapOptions = {
+                                                zoom: 12,
+                                                center: new google.maps.LatLng(@Model.Locations.First().Latitude , @Model.Locations.First().Longitude)
+                                            };
+
+                                            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+                                            var stores = @Html.Raw(Json.Encode(Model.Locations)); // Deserialize the list of stores from the model
+
+                                            for (var i = 0; i < stores.length; i++) {
+                                                var store = stores[i];
+                                                var marker = new google.maps.Marker({
+                                                    position: new google.maps.LatLng( store.Longitude , store.Latitude ),
+                                                    map: map,
+                                                    title: store.Name
+                                                });
+                                            }
+                                        }
+                                      </script>
+
+                                      <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNYN8AXl84Kwh_ib-K2Z798RMhgao3S6g&libraries=places&callback=initMap"></script>
+
+                                  </div>
+
+
+                <div class="d-flex align-items-center justify-content-between mb-2 mt-2 ml-3 pt-2">
+                    <div>
+                        <strong class="mr-2">Share on:</strong>
+                        <div class="d-inline-flex">
+                            <a class="px-2" href="">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a class="px-2" href="">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a class="px-2" href="">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a class="px-2" href="">
+                                <i class="fab fa-pinterest"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Shop Product Start -->
         <div class="col-lg-9 col-md-8">
             <div class="row pb-3">
@@ -119,20 +159,20 @@
                     <div class="d-flex align-items-center justify-content-between mb-4">
 
                         <div class="ml-2">
-                            <h3>@Model.Store.name</h3>
+                            <h3>Products</h3>
                         </div>
                     </div>
                 </div>
 
                 @foreach (var item in Model.Products)
                 {
-                    var base64 = Convert.ToBase64String(item.image);
-                    var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
+                    var basic = Convert.ToBase64String(item.image);
+                    var img = string.Format("data:image/jpg;base64,{0}", basic);
                     <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
 
                         <div class="product-item bg-light mb-4">
                             <div class="product-img position-relative overflow-hidden">
-                                <img class="img-fluid w-100" src="@imgSrc" alt="">
+                                <img class="img-fluid w-100" src="@img" alt="">
                                 <div class="product-action">
                                     <a class="btn btn-outline-dark btn-square" href="@Url.Action("AddWishlist", new { id = item.id })"><i class="far fa-heart"></i></a>
                                     <a class="btn btn-outline-dark btn-square" href="@Url.Action("ProductDetail", new { id = item.id })"><i class="fa fa-search"></i></a>

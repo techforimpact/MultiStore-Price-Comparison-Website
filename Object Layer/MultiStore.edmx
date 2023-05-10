@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MultiStoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MultiStoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Carousel">
           <Key>
             <PropertyRef Name="id" />
@@ -33,6 +33,14 @@
           <Property Name="category_id" Type="int" Nullable="false" />
           <Property Name="imageurl" Type="image" />
         </EntityType>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="store_id" />
+          </Key>
+          <Property Name="store_id" Type="int" Nullable="false" />
+          <Property Name="longitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+          <Property Name="latitude" Type="decimal" Precision="9" Scale="6" Nullable="false" />
+        </EntityType>
         <EntityType Name="Prices">
           <Key>
             <PropertyRef Name="product_id" />
@@ -42,7 +50,7 @@
           <Property Name="product_id" Type="int" Nullable="false" />
           <Property Name="store_id" Type="int" Nullable="false" />
           <Property Name="price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="created_at" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="created_at" Type="datetime2" Precision="7" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="Products">
           <Key>
@@ -188,10 +196,25 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Location_Stores">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Location" Type="Self.Location" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Location">
+              <PropertyRef Name="store_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="MultiStoreModelStoreContainer">
           <EntitySet Name="Carousel" EntityType="Self.Carousel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CategoryImage" EntityType="Self.CategoryImage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Prices" EntityType="Self.Prices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StoreImage" EntityType="Self.StoreImage" Schema="dbo" store:Type="Tables" />
@@ -226,9 +249,12 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Wishlists" EntitySet="Wishlists" />
           </AssociationSet>
+          <AssociationSet Name="FK_Location_Stores" Association="Self.FK_Location_Stores">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Location" EntitySet="Location" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MultiStoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -272,7 +298,7 @@
           <Property Name="product_id" Type="Int32" Nullable="false" />
           <Property Name="store_id" Type="Int32" Nullable="false" />
           <Property Name="price1" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="created_at" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="created_at" Type="DateTime" annotation:StoreGeneratedPattern="Computed" Precision="7" />
           <NavigationProperty Name="Product" Relationship="Self.FK__Prices__product___0D7A0286" FromRole="Prices" ToRole="Products" />
           <NavigationProperty Name="Store" Relationship="Self.FK__Prices__store_id__0E6E26BF" FromRole="Prices" ToRole="Stores" />
         </EntityType>
@@ -313,6 +339,7 @@
           <Property Name="created_at" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Prices" Relationship="Self.FK__Prices__store_id__0E6E26BF" FromRole="Stores" ToRole="Prices" />
           <NavigationProperty Name="StoreImages" Relationship="Self.FK__StoreImag__store__5DCAEF64" FromRole="Stores" ToRole="StoreImage" />
+          <NavigationProperty Name="Location" Relationship="MultiStoreModel.FK_Location_Stores" FromRole="Store" ToRole="Location" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -467,7 +494,35 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Wishlists" EntitySet="Wishlists" />
           </AssociationSet>
+          <EntitySet Name="Locations" EntityType="MultiStoreModel.Location" />
+          <AssociationSet Name="FK_Location_Stores" Association="MultiStoreModel.FK_Location_Stores">
+            <End Role="Store" EntitySet="Stores" />
+            <End Role="Location" EntitySet="Locations" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="store_id" />
+          </Key>
+          <Property Name="store_id" Type="Int32" Nullable="false" />
+          <Property Name="longitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
+          <Property Name="latitude" Type="Decimal" Nullable="false" Precision="9" Scale="6" />
+          <NavigationProperty Name="Store" Relationship="MultiStoreModel.FK_Location_Stores" FromRole="Location" ToRole="Store" />
+        </EntityType>
+        <Association Name="FK_Location_Stores">
+          <End Type="MultiStoreModel.Store" Role="Store" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MultiStoreModel.Location" Role="Location" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Store">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Location">
+              <PropertyRef Name="store_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -570,6 +625,15 @@
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
                 <ScalarProperty Name="product_id" ColumnName="product_id" />
                 <ScalarProperty Name="created_at" ColumnName="created_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Locations">
+            <EntityTypeMapping TypeName="MultiStoreModel.Location">
+              <MappingFragment StoreEntitySet="Location">
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="store_id" ColumnName="store_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

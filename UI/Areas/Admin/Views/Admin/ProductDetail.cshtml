@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "ProductDetail";
+    ViewBag.CssFileName = "new.css";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -16,6 +17,10 @@
 
 
 <div class="mainPage">
+
+    <h1>Product Details</h1>
+
+    @Html.ActionLink("Add New Price", "AddStoreProduct", "Admin", new { area = "Admin" }, new { @class = "btn btn-primary" })
 
 
     <!-- Shop Detail Start -->
@@ -45,10 +50,10 @@
 
             <div class="col-lg-7 h-auto mb-30">
                 <div class="h-100 bg-light p-30">
-                    <h3>@Model.Product.name</h3>
+                    <h3 class="p-3 h1">@Model.Product.name</h3>
 
                     <div class="container">
-                        <div class="parent-container">
+                        <div class="parent-container pContainer-h">
                             @foreach (var item in Model.Prices.Where(c => c.product_id == Model.Product.id).OrderBy(c => c.price1))
                             {
                                 var basic = Convert.ToBase64String(Model.StoreImages.Where(c => c.store_id == item.store_id).First().imageurl);
@@ -57,16 +62,23 @@
                                     <img src="@img" alt="Product Image" class="product-image">
                                     <div class="product-details">
                                         <div class="name">@item.Store.name</div>
-                                        <div class="price">SR @item.price1</div>
+                                        <div class="price">@item.price1</div>
+                                        <a href="@Url.Action("DeletePrice" , new {id = item.id})" class="btn btn-danger close">X</a>
+
                                     </div>
                                 </div>
                             }
                             <!-- Add more sub-containers as needed -->
                         </div>
-                    </div>
+                        <div class="buttons">
 
+                            @Html.ActionLink("Edit", "EditProduct", new { id = Model.Product.id }, new { @class = "h1 material-symbols-outlined link close" })
+                            <a href="@Url.Action("DeleteProduct", new { id = Model.Product.id })" class="h1 material-symbols-outlined link close delete-product-link" data-confirm-message="Are you sure you want to delete this product?">Delete</a>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
     <!-- Shop Detail End -->

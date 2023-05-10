@@ -103,7 +103,8 @@
 
                 <div class="container">
                     <div class="parent-container">
-                        @foreach(var item in Model.Prices.Where(c => c.product_id == Model.Product.id).OrderBy(c => c.price1)) {
+                        @foreach (var item in Model.Prices.Where(c => c.product_id == Model.Product.id).OrderBy(c => c.price1))
+                        {
                             var basic = Convert.ToBase64String(Model.StoreImages.Where(c => c.store_id == item.store_id).First().imageurl);
                             var img = string.Format("data:image/jpg;base64,{0}", basic);
                         <div class="sub-container">
@@ -122,13 +123,25 @@
 
 
                 <div class="d-flex align-items-center justify-content-between mb-2 mt-2 ml-3 pt-2">
-                    <a class="btn btn-primary px-3" href="#">
-                        <i class="fa fa-heart mr-1"></i> Add To
-                        Wishlist
-                    </a>
+                    @if (Model.Wishlist.Where(c => c.product_id == Model.Product.id).Count() == 0)
+                    {
+                        <a class="btn btn-primary px-3" href="@Url.Action("AddToWish", "User", new { id = Model.Product.id })">
+                            <i class="fa fa-heart mr-1"></i> Add To
+                            Wishlist
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary px-3" href="@Url.Action("RemoveWishlist" , "User" , new { id = Model.Product.id })">
+                            <i class="fa fa-heart mr-1"></i> Remove From Wishlist
+                        </a>
+                        
+                    }
+
+
                     <div>
                         <strong class="mr-2">Share on:</strong>
-                    <div class="d-inline-flex">
+                        <div class="d-inline-flex">
                             <a class="px-2" href="">
                                 <i class="fab fa-facebook-f"></i>
                             </a>

@@ -9,13 +9,7 @@
 <div class="inSidebarContainer">
     <div class="topnav">
         <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
-        <a href="#news" class="material-symbols-outlined">notifications</a>
         <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
-        @using (Html.BeginForm("SearchCategory", "Admin", new { area = "Admin" }, FormMethod.Get))
-        {
-            <button type="submit"><span class="material-symbols-outlined">Search</span></button>
-            <input type="search" placeholder="Search...">
-        }
     </div>
 </div>
 
@@ -40,68 +34,70 @@
     <br />
     <div class="lower-section">
         <h3>View Catagories</h3>
-        <table class="viewCatagories">
+        <div class="table">
+            <table class="viewCatagories">
 
-            <tr>
-                <th class="table-cell heading">
-                    @Html.DisplayNameFor(model => model.id)
-                </th>
-                <th class="table-cell">
-                    @Html.DisplayNameFor(model => model.name)
-                </th>
-                <th class="table-cell">
-                    @Html.DisplayNameFor(model => model.parent_id)
-                </th>
-                <th>
-                    Edit
-                </th>
-                <th>
-                    Details
-                </th>
-                <th>
-                    Delete
-                </th>
-            </tr>
-
-            @foreach (var item in Model)
-            {
                 <tr>
-                    <td id="@item.id" class="table-cell">
-                        @Html.DisplayFor(modelItem => item.id)
-                    </td>
-                    <td class="table-cell link">
-                        @*@Html.ActionLink(item.Name, "Store", "Admin", new { id = item.id }, null)*@
-                        @Html.DisplayFor(modelItem => item.name);
-                    </td>
-                    <td class="table-cell">
-                        @Html.DisplayFor(modelItem => item.parent_id);
-                    </td>
-
-                    <td class="table-cell">
-                        @using (Html.BeginForm("EditCategory", "Admin", new { id = item.id }, FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="material-symbols-outlined link-button">Edit</button>
-                        }
-                    </td>
-                    <td class="table-cell">
-                        @using (Html.BeginForm("CategoryDetails", "Admin", new { id = item.id }, FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="material-symbols-outlined link-button">Details</button>
-                        }
-                    </td>
-                    <td class="table-cell">
-                        @using (Html.BeginForm("DeleteCategory", "Admin", new { id = item.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete this product?');" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="material-symbols-outlined link-button">Delete</button>
-                        }
-                    </td>
+                    <th class="table-cell heading">
+                        @Html.DisplayNameFor(model => model.id)
+                    </th>
+                    <th class="table-cell">
+                        @Html.DisplayNameFor(model => model.name)
+                    </th>
+                    <th class="table-cell">
+                        @Html.DisplayNameFor(model => model.parent_id)
+                    </th>
+                    <th>
+                        Edit
+                    </th>
+                    <th>
+                        Details
+                    </th>
+                    <th>
+                        Delete
+                    </th>
                 </tr>
-            }
 
-        </table>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td id="@item.id" class="table-cell">
+                            @Html.DisplayFor(modelItem => item.id)
+                        </td>
+                        <td class="table-cell link">
+                            @*@Html.ActionLink(item.Name, "Store", "Admin", new { id = item.id }, null)*@
+                            @Html.DisplayFor(modelItem => item.name)
+                        </td>
+                        <td class="table-cell">
+                            @Html.DisplayFor(modelItem => item.parent_id)
+                        </td>
+
+                        <td class="table-cell">
+                            @using (Html.BeginForm("EditCategory", "Admin", new { id = item.id }, FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="material-symbols-outlined link-button">Edit</button>
+                            }
+                        </td>
+                        <td class="table-cell">
+                            @using (Html.BeginForm("CategoryDetails", "Admin", new { id = item.id }, FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="material-symbols-outlined link-button">Info</button>
+                            }
+                        </td>
+                        <td class="table-cell">
+                            @using (Html.BeginForm("DeleteCategory", "Admin", new { id = item.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete this product?');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="material-symbols-outlined link-button">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
     </div>
 
 

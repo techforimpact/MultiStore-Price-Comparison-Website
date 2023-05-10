@@ -9,23 +9,18 @@
     <div class="inSidebarContainer">
         <div class="topnav">
             <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
-            <a href="#news" class="material-symbols-outlined">notifications</a>
             <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
-            @using (Html.BeginForm("Search", "Products", FormMethod.Post, new { id = "searchForm" }))
+            @using (Html.BeginForm("Products", "Admin", FormMethod.Get, new { @class = "search-form" }))
             {
+              
+            <div class="input-group-append">
+                        <button type="submit" class="btn btn-link input-group-text bg-transparent text-primary" style="border: none;">
+                            <i class="material-symbols-outlined">Search</i>
+                        </button>
+                    </div>
                 <div class="input-group">
-                    @Html.TextBox("searchInputProducts", null, new { @class = "form-control", placeholder = "Search for a product..." })
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Search</button>
-                    </div>
-                </div>
-                <div class="dropdown" id="searchDropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
-                        Select a product...
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <!-- Dropdown items will be populated dynamically -->
-                    </div>
+                    @Html.TextBox("searchString", null, new { @class = "form-control", placeholder = "Search for products" })
+
                 </div>
             }
         </div>
@@ -37,8 +32,12 @@
     <div class="mainPage">
 
         <h2>
-            View all products @Html.ActionLink("Add Product", "AddProduct", "Admin", new { area = "Admin" }, new { @class = "btn btn-primary" })
+            View all products
         </h2>
+        @Html.ActionLink("Add Product", "AddProduct", "Admin", new { area = "Admin" }, new { @class = "addProductBtn" })
+    <div style="margin-top: 20px">
+        @Html.ActionLink("Add New Price", "AddStoreProduct", "Admin", new { area = "Admin" }, new { @class = "addProductBtn" })
+    </div>
 
 
 
@@ -49,19 +48,22 @@
                     <a href="@Url.Action("ProductDetail" , "Admin" , new {id = item.id})">
                         <div class="image-container border border-secondary">
                             @{
-                                if (item.image != null) {
+                                if (item.image != null)
+                                {
                                     var base64 = Convert.ToBase64String(item.image);
                                     var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
 
-                                
 
-                                <img src="@Url.Content(@imgSrc)" alt="@item.name" />
+
+                                    <img src="@Url.Content(@imgSrc)" alt="@item.name" />
                                 }
                             }
                         </div>
                         <div class="product-info">
                             <h3>@item.name</h3>
                             <p>@item.Category.name</p>
+        
+        
                             <div class="buttons">
 
                                 @Html.ActionLink("Edit", "EditProduct", new { id = item.id }, new { @class = "material-symbols-outlined link" })

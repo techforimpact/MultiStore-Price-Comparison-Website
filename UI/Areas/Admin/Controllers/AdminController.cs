@@ -1,4 +1,5 @@
 ﻿using Data_Access_Layer;
+using Data_Access_Layer;
 using Object_Layer;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Drawing;
 using System.IO;
 using System.Web.WebSockets;
 using System.Web.Optimization;
+using System.Data.Entity.Infrastructure;
 
 namespace UI.Areas.Admin.Controllers
 {
@@ -27,6 +29,7 @@ namespace UI.Areas.Admin.Controllers
         private DAL_User userdb;
         private DAL_Carousel carouseldb;
         private DAL_Price pricesdb;
+        private DAL_Location locationdb;
 
 
         public AdminController()
@@ -34,11 +37,12 @@ namespace UI.Areas.Admin.Controllers
             productdb = new DAL_Product();
             storedb = new DAL_Store();
             categorydb = new DAL_Category();
-            storeimagedb= new DAL_StoreImages();
-            categoryimagedb= new DAL_CategoryImages();
+            storeimagedb = new DAL_StoreImages();
+            categoryimagedb = new DAL_CategoryImages();
             userdb = new DAL_User();
             carouseldb = new DAL_Carousel();
             pricesdb = new DAL_Price();
+            locationdb = new DAL_Location();
         }
 
 
@@ -58,12 +62,12 @@ namespace UI.Areas.Admin.Controllers
         }
 
 
-/*        [HttpPost]
-        public ActionResult UploadFile(HttpPostedFileBase file)
-        {
-            GoogleDriveFileRepository.FileUpload(file);
-            return RedirectToAction("GetGoogleDriveFiles");
-        }*/
+        /*        [HttpPost]
+                public ActionResult UploadFile(HttpPostedFileBase file)
+                {
+                    GoogleDriveFileRepository.FileUpload(file);
+                    return RedirectToAction("GetGoogleDriveFiles");
+                }*/
 
 
 
@@ -116,6 +120,43 @@ namespace UI.Areas.Admin.Controllers
             return View(category);
         }
 
+        [HttpPost]
+        public ActionResult EditCategory(int id)
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+            var category = categorydb.Getbyid(id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(category);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateCategory(Category category)
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+
+            var original = categorydb.Getbyid(category.id);
+            if (original == null)
+            {
+                return HttpNotFound();
+            }
+
+            original.name = category.name;
+            original.parent_id = category.parent_id;
+            categorydb.Update(original);
+            return RedirectToAction("Categories");
+        }
 
         // POST: Admin/Delete/5
         [HttpPost, ActionName("DeleteCategory")]
@@ -194,14 +235,53 @@ namespace UI.Areas.Admin.Controllers
 
         public ActionResult AddStoreProduct()
         {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+
+            // Retrieve a list of categories from your database
+            var products = productdb.GetAll();
+            var stores = storedb.GetAll();
+            // Create a list of SelectListItem objects for the dropdown list
+            var productListItems = products.Select(c => new SelectListItem
+            {
+                Value = c.id.ToString(),
+                Text = c.name
+            });
+
+            var storeList = stores.Select(c => new SelectListItem
+            {
+                Value = c.id.ToString(),
+                Text = c.name
+            });
+
+            // Add the categoryListItems to the ViewData dictionary
+            ViewData["product_id"] = productListItems;
+            ViewData["store_id"] = storeList;
+
             return View();
         }
 
         [HttpPost]
-        public ActionResult AddStoreProduct(Product newproduct)
+        public ActionResult AddStoreProduct(Price newproduct)
         {
 
-            return View();
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+            newproduct.created_at = DateTime.Now;
+            if (pricesdb.GetAll().Where(c => c.product_id == newproduct.product_id && c.store_id == newproduct.store_id).Count() != 0)
+            {
+                return RedirectToAction("AddStoreProduct", "Admin");
+            }
+
+            pricesdb.Insert(newproduct);
+
+            return RedirectToAction("ProductDetail", "Admin", new { id = newproduct.product_id });
         }
 
         public ActionResult StoreDetails(int id)
@@ -257,7 +337,7 @@ namespace UI.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddStore(Store category , HttpPostedFileBase Image)
+        public ActionResult AddStore(Store category, HttpPostedFileBase Image)
         {
             if (ModelState.IsValid)
             {
@@ -285,6 +365,49 @@ namespace UI.Areas.Admin.Controllers
         }
 
 
+        // GET: Admin/Edit/5
+        public ActionResult EditStore(int id)
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+            var store = storedb.Getbyid(id);
+            if (store == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(store);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateStore(Store store)
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+
+            var original = storedb.Getbyid(store.id);
+            if (original == null)
+            {
+                return HttpNotFound();
+            }
+
+            original.name = store.name;
+            original.address = store.address;
+            original.city = store.city;
+            original.state = store.state;
+            original.zip_code = store.zip_code;
+            original.country = store.country;
+
+            storedb.Update(original);
+            return RedirectToAction("Stores");
+        }
 
         //------------------------PRODUCTS CODE----------------------------------------------------------
 
@@ -362,7 +485,7 @@ namespace UI.Areas.Admin.Controllers
         }
 
 
-        public ActionResult AddProduct() { 
+        public ActionResult AddProduct() {
 
             // Retrieve a list of categories from your database
             var categories = categorydb.GetAll();
@@ -447,6 +570,10 @@ namespace UI.Areas.Admin.Controllers
                 return HttpNotFound();
             }
 
+            AddProductModel model = new AddProductModel();
+
+            model.product = product;
+
             var categories = categorydb.GetAll();
             var stores = storedb.GetAll();
             // Create a list of SelectListItem objects for the dropdown list
@@ -467,29 +594,80 @@ namespace UI.Areas.Admin.Controllers
             ViewData["store_id"] = storeListItems;
 
 
-            return View(product);
+            return View(model);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SaveProduct(Product model , HttpPostedFileBase Image)
+        public ActionResult SaveProduct(AddProductModel model, HttpPostedFileBase Image)
         {
-            byte[] imageBytes = null;
-            using (var binaryReader = new BinaryReader(Image.InputStream))
+
+            if (Session["AdminUserName"] == null)
             {
-                imageBytes = binaryReader.ReadBytes(Image.ContentLength);
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
             }
 
+            var originalProduct = productdb.Getbyid(model.product.id);
 
-            model.image = imageBytes;
-            productdb.Update(model);
+            // Update the properties of the original entity
+            originalProduct.name = model.product.name;
+            originalProduct.category_id = model.product.category_id;
+            originalProduct.description = model.product.description;
+
+
+            if (Image != null)
+            {
+                byte[] imageBytes = null;
+                using (var binaryReader = new BinaryReader(Image.InputStream))
+                {
+                    imageBytes = binaryReader.ReadBytes(Image.ContentLength);
+                }
+
+
+                originalProduct.image = imageBytes;
+
+            }
+
+            // Save the changes
+            try
+            {
+                productdb.Update(originalProduct);
+                productdb.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                // Handle concurrency exception (if necessary)
+            }
 
             // redirect to category list
             return RedirectToAction("Products");
 
         }
 
+
+
+
+        public ActionResult DeletePrice(int id)
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+            var price = pricesdb.GetAll().Where(c => c.id == id).First();
+            if (price == null)
+            {
+                return HttpNotFound();
+            }
+
+            pricesdb.DeleteByObj(price);
+
+            string lastPageUrl = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : string.Empty;
+
+            return Redirect(lastPageUrl);
+
+        }
 
 
         //------------------------USER_MENU CODE----------------------------------------------------------
@@ -630,7 +808,7 @@ namespace UI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
             }
 
-            IEnumerable<string> role = new List<string> { "carousel" , "poster1" ,  "poster2"};
+            IEnumerable<string> role = new List<string> { "carousel", "poster1", "poster2" };
 
             var roleList = role.Select(c => new SelectListItem
             {
@@ -695,6 +873,48 @@ namespace UI.Areas.Admin.Controllers
         }
 
 
+        //--------------------------------LOCATION CODE------------------------------------------------
+
+        public ActionResult AddLocation()
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+            var locationIds = locationdb.GetAll().Select(loc => loc.store_id).ToList();
+
+            var stores = storedb.GetAll().Where(store => !locationIds.Contains(store.id)).ToList();
+
+
+            var storeList = stores.Select(c => new SelectListItem
+            {
+                Value = c.id.ToString(),
+                Text = c.name
+            });
+
+
+            ViewData["store_id"] = storeList;
+
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NewLocation(Location loc)
+        {
+            if (Session["AdminUserName"] == null)
+            {
+                return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+            }
+
+            locationdb.Insert(loc);
+
+            return RedirectToAction("Stores", "Admin");
+        }
+
+
         //--------------------------------NAVBAR CODE----------------------------------------------------
 
         public ActionResult Logout()
@@ -707,7 +927,18 @@ namespace UI.Areas.Admin.Controllers
 
     }
 
-
+    public class StoreInsertionModel
+    {
+        public int id;
+        public string name;
+        public string description;
+        public string country;
+        public string state;
+        public string city;
+        public string zip_code;
+        public decimal longitude;
+        public decimal latitude;
+    }
 
 
     public class StoreViewModel

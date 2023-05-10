@@ -1,4 +1,4 @@
-﻿@model Object_Layer.Product
+﻿@model UI.Areas.Admin.Controllers.AddProductModel
 
 @{
     ViewBag.Title = "EditProduct";
@@ -9,7 +9,7 @@
 <div class="mainPage">
 
     <h2>Edit Product</h2>
-    @using (Html.BeginForm("SaveUser" , "Admin" , new {area = "Admin" , controller = "Admin" }, FormMethod.Post))
+    @using (Html.BeginForm("SaveProduct" , "Admin" , new {area = "Admin" , controller = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
@@ -18,36 +18,44 @@
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
-                @Html.LabelFor(model => model.name, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.product.name, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.product.name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.product.name, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.category_id, "category_id", htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.product.category_id, "category_id", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.category_id, (IEnumerable<SelectListItem>)ViewData["category_id"], "-- Select a category --", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(model => model.product.category_id, (IEnumerable<SelectListItem>)ViewData["category_id"], "-- Select a category --", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.product.category_id, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.description, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.product.description, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.description, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.product.description, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.product.description, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    @Html.ActionLink("Cancel", "Products")
+                @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Image, new { type = "file", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
                 </div>
             </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary">Save</button>
+            @Html.ActionLink("Back to List", "Products")
         </div>
+    </div>
+</div>
     }
 
 </div>

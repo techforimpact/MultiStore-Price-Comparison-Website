@@ -72,7 +72,18 @@ namespace Data_Access_Layer
 
         public IEnumerable<Product> GetCategoryProducts(int id)
         {
+            var categories = db.Categories.ToList().Where(c => c.parent_id == id);
+
             var products = db.Products.Where(p => p.category_id == id).ToList();
+
+            foreach( var cat in categories )
+            {
+                if (cat.parent_id == id)
+                {
+                    products.AddRange(db.Products.Where(p => p.category_id == cat.id).ToList());
+                }
+            }
+
             return products;
         }
 

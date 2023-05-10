@@ -8,47 +8,60 @@
     <link href="@Url.Content("~/Content/" + ViewBag.CssFileName)" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    @*    <link href="~/Content/bootstrap.min.css" rel="stylesheet">*@
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
 </head>
 <body>
-    <div class="sideNavBar">
-        <ul>
-            <a class="navLogo" href="@Url.Action("Index" , "Admin" , new { area = "Admin"})">
-            <li><img src="~/Images/navLogoText.png" alt="logo"></li></a>
-            <span class="sideNavButtons">
+    <div id="mySidenav" class="sidenav" style="width:300px;">
+        <div class="sideNavBar">
 
-                <a href="@Url.Action("Index", "Admin", new { area = "Admin" })">
-            <li>Dashboard</li>
-            </a>
+            <ul>
+                <a class="navLogo" href="@Url.Action("Index" , "Admin" , new { area = "Admin"})">
+                <li><img src="~/Images/navLogoText.png" alt="logo"></li></a>
+                <span class="sideNavButtons">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <a href="@Url.Action("Index", "Admin", new { area = "Admin" })">
+                <li>Dashboard</li>
+                </a>
 
-            <a href="@Url.Action("Categories", "Admin", new { area = "Admin" })">
-            <li>Categories</li>
-            </a>
+                <a href="@Url.Action("Categories", "Admin", new { area = "Admin" })">
+                <li>Categories</li>
+                </a>
 
-            <a href="@Url.Action("Stores", "Admin", new { area = "Admin" })">
-            <li>Stores</li>
-            </a>
+                <a href="@Url.Action("Stores", "Admin", new { area = "Admin" })">
+                <li>Stores</li>
+                </a>
 
-            <a href="@Url.Action("Products", "Admin", new { area = "Admin" })">
-            <li>Products</li>
-            </a>
+                <a href="@Url.Action("Products", "Admin", new { area = "Admin" })">
+                <li>Products</li>
+                </a>
 
-            <a href="@Url.Action("User_Menu", "Admin", new { area = "Admin" })">
-            <li>Users Data</li>
-            </a>
+                <a href="@Url.Action("User_Menu", "Admin", new { area = "Admin" })">
+                <li>Users Data</li>
+                </a>
 
 
-            <a href="@Url.Action("Featured_Images", "Admin", new { area = "Admin" })">
-            <li>Featured Images</li>
-            </a>
-            </span>
-        </ul>
+                <a href="@Url.Action("Featured_Images", "Admin", new { area = "Admin" })">
+                <li>Featured Images</li>
+                </a>
+                </span>
+            </ul>
+        </div>
     </div>
+    <span class="openBtn" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+
 
 
     @RenderBody()
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "300px";
+        }
 
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+    </script>
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
 

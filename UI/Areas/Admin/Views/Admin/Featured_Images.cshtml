@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Featured_Images";
+    ViewBag.CssFileName = "products.css";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,16 +10,16 @@
 <div class="inSidebarContainer">
     <div class="topnav">
         <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
-        <a href="#news" class="material-symbols-outlined">notifications</a>
         <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
     </div>
 </div>
 
 <div class="mainPage">
-
-    <h1>Featured Images @Html.ActionLink("Add Image", "AddCarousel", "Admin", new { area = "Admin" }, new { @class = "btn btn-primary" })</h1>
-
-    <div class="container">
+    <div class="d-flex justify-content-between">
+        <h1>Featured Images</h1>
+        <div>"@Html.ActionLink("Add Image", "AddCarousel", "Admin", new { area = "Admin" }, new { @class = "btn btn-primary btn-lg admin-button" })</div>
+    </div>
+    <div class="container" style="margin-left: 0 !important;">
         <br />
         <h2>Carousel</h2>
         <hr />

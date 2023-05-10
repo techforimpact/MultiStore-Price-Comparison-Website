@@ -10,7 +10,6 @@
 <div class="inSidebarContainer">
     <div class="topnav">
         <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
-        <a href="#news" class="material-symbols-outlined">notifications</a>
         <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
         @using (Html.BeginForm("SearchProduct", "Admin", new { area = "Admin" }, FormMethod.Get))
         {
@@ -25,30 +24,22 @@
 
     <div class="grid-container">
         @if (Model != null) { 
-            foreach (var item in Model)
+            foreach (var product in Model)
             {
-                <div class="grid-item border border-dark">
+
+                <div class="grid-item">
                     <a href="#">
-                        <div class="image-container border border-secondary">
-                            @{
-                                if (item.image != null)
-                                {
-                                    var base64 = Convert.ToBase64String(item.image);
-                                    var imgSrc = string.Format("data:image/jpg;base64,{0}", base64);
-
-
-
-                                    <img src="@Url.Content(@imgSrc)" alt="@item.name" />
-                                }
-                            }
+                        <div class="image-container">
+                            <img src="@Url.Content(product.ImageUrl)" alt="@product.Name">
                         </div>
                         <div class="product-info">
-                            <h3>@item.name</h3>
-                            <p>@item.Category.name</p>
-                            <div class="buttons">
+                            <h3>@product.Name</h3>
+                            <p>@product.Category</p>
 
-                                @Html.ActionLink("Edit", "EditProduct", new { id = item.id }, new { @class = "material-symbols-outlined link" })
-                                <a href="@Url.Action("DeleteProduct", new { id = item.id })" class="material-symbols-outlined link delete-product-link" data-confirm-message="Are you sure you want to delete this product?">Delete</a>
+
+                            <div class="buttons">
+                                <a href="#" class="edit"><i class="material-symbols-outlined">edit_square</i></a>
+                                <a href="#" class="remove"><i class="material-symbols-outlined">delete</i></a>
                             </div>
                         </div>
                     </a>

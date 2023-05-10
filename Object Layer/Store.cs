@@ -34,5 +34,6 @@ namespace Object_Layer
         public virtual ICollection<Price> Prices { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StoreImage> StoreImages { get; set; }
+        public virtual Location Location { get; set; }
     }
 }

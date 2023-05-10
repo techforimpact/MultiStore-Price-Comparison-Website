@@ -34,5 +34,6 @@ namespace Object_Layer
         public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Wishlist> Wishlists { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
     }
 }

@@ -12,15 +12,12 @@ namespace Object_Layer
     using System;
     using System.Collections.Generic;
     
-    public partial class Price
+    public partial class Location
     {
-        public int id { get; set; }
-        public int product_id { get; set; }
         public int store_id { get; set; }
-        public decimal price1 { get; set; }
-        public Nullable<System.DateTime> created_at { get; set; }
+        public decimal longitude { get; set; }
+        public decimal latitude { get; set; }
     
-        public virtual Product Product { get; set; }
         public virtual Store Store { get; set; }
     }
 }

@@ -9,16 +9,9 @@
 <div class="inSidebarContainer">
     <div class="topnav">
         <a href="@Url.Action("Logout", "Admin", new { area = "Admin" })" class="material-symbols-outlined">logout</a>
-        <a href="#news" class="material-symbols-outlined">notifications</a>
         <a href="#contact" class="material-symbols-outlined">account_circle expand_more</a>
-        @using (Html.BeginForm("Stores", "Admin", new { area = "Admin" }, FormMethod.Get))
-        {
-            <button type="submit">Search</button>
-            <input type="search" placeholder="Search...">
-
-        }
     </div>
-</div>s
+</div>
 
 
 <div class="mainPage">
@@ -26,25 +19,30 @@
     @*    <p>
             @Html.ActionLink("Create New", "Create")
         </p>*@
-
+<div class="upper-section">
     @using (Html.BeginForm("AddStore", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
-            <div class="addCatagories">
-                <h2>Add a new Store</h2>
-                <input type="text" name="name" id="name" placeholder="Name"><br>
-                <input type="file" name="image" id="state" placeholder="Store Logo"><br>
-                <input type="text" name="address" id="address" placeholder="Country"><br>
-                <input type="text" name="city" id="city" placeholder="City"><br>
-                <input type="text" name="state" id="state" placeholder="State"><br>
-                <input type="text" name="country" id="country" placeholder="Country"><br>
-                <button type="submit" class="add-product-button">Add</button>
-            </div>
+        <div class="addCatagories">
+            <h2>Add a new Store</h2>
+            <input type="text" name="name" id="name" placeholder="Name"><br>
+            <input type="file" name="image" id="image" placeholder="Store Logo"><br>
+            <input type="text" name="address" id="address" placeholder="Address"><br>
+            <input type="text" name="city" id="city" placeholder="City"><br>
+            <input type="text" name="state" id="state" placeholder="State"><br>
+            <input type="text" name="country" id="country" placeholder="Country"><br>
+            <input type="text" name="zip_code" id="zip_code" placeholder="Zip Code"><br>
+            <button type="submit" class="add-product-button">Add</button>
+        </div>
 
     }
-    <div class="lower-section">
-        <p>View Stores</p>
+
+    <a href="@Url.Action("AddLocation" , "Admin")" class="add-product-button">Add Location</a>
+</div>
+<div class="lower-section">
+    <h2>View Stores</h2>
+    <div class="table">
         <table class="viewCatagories">
 
             <tr>
@@ -86,7 +84,7 @@
                     </td>
                     <td class="table-cell link">
                         @*@Html.ActionLink(item.Name, "Store", "Admin", new { id = item.id }, null)*@
-                        @Html.DisplayFor(modelItem => item.name);
+                        @Html.DisplayFor(modelItem => item.name)
                     </td>
                     <td class="table-cell">
                         @Html.DisplayFor(modelItem => item.address)
@@ -104,27 +102,28 @@
                         @using (Html.BeginForm("EditStore", "Admin", new { id = item.id }, FormMethod.Post))
                         {
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="link-button">Edit</button>
+                            <button type="submit" class="material-symbols-outlined link-button">Edit</button>
                         }
                     </td>
                     <td class="table-cell">
-                        @using (Html.BeginForm("StoreDetails", "Admin", new { id = item.id }, FormMethod.Post ))
+                        @using (Html.BeginForm("StoreDetails", "Admin", new { id = item.id }, FormMethod.Post))
                         {
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="link-button">Details</button>
+                            <button type="submit" class="material-symbols-outlined link-button">Info</button>
                         }
                     </td>
                     <td class="table-cell">
                         @using (Html.BeginForm("DeleteStore", "Admin", new { id = item.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete this store?');" }))
                         {
                             @Html.AntiForgeryToken()
-                            <button type="submit">Delete</button>
+                            <button type="submit" class="material-symbols-outlined link-button">Delete</button>
                         }
                     </td>
                 </tr>
             }
 
         </table>
+    </div>
     </div>
 
 

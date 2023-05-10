@@ -22,6 +22,10 @@
     padding: 10px;
 }
 
+.pContainer-h {
+    height: 700px;
+}
+
 .sub-container {
     border: 1px solid #eee;
     display: flex;
@@ -57,12 +61,15 @@
 .price {
     font-weight: bold;
     font-size: 1.2rem;
-    color: #ff0000;
+    color: #85bb65;
 }
 
 
 
-
+.close {
+    text-decoration: none;
+    color: black;
+}
 
 
 .text-custom {

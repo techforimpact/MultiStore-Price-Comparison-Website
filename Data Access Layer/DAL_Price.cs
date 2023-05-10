@@ -64,6 +64,12 @@ namespace Data_Access_Layer
 
         }
 
+        public void DeleteByObj(Price price)
+        {
+            db.Prices.Remove(price);
+            SaveChanges();
+        }
+
         public void SaveChanges()
         {
             db.SaveChanges();

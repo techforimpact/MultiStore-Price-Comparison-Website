@@ -202,6 +202,9 @@
     <Compile Include="CategoryImage.cs">
       <DependentUpon>MultiStore.tt</DependentUpon>
     </Compile>
+    <Compile Include="Location.cs">
+      <DependentUpon>MultiStore.tt</DependentUpon>
+    </Compile>
     <Compile Include="MultiStore.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
