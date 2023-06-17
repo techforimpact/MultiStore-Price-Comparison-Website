@@ -42,17 +42,16 @@ The following are the implemented requirements of this web application:
 
 ## Class Diagram
 
-<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website-.NET/assets/136437727/1912f36c-d40c-496c-9267-8bfe4042c446" alt="Class Diagram" width="500"/>
-
+<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website/assets/136437727/3c7488b0-e180-46e2-af87-602e0f436571" alt="Class Diagram" width="500"/>
 
 ## Screenshots
 
-<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website-.NET/assets/136437727/6bb57986-341b-4962-bb25-477362eb6c7a" alt="Login" width="400"/>
-<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website-.NET/assets/136437727/5cca4341-fdd0-415f-8d06-bc373d33c297" alt="Product Detail" width="400"/>
-<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website-.NET/assets/136437727/34a77a9a-2092-4cdf-a37d-05d1865ffaae" alt="Add product" width="400"/>
-<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website-.NET/assets/136437727/4dd0cca9-8350-4a24-b9a5-03ff9fd554a2" alt="Add store" width="400"/>
-<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website-.NET/assets/136437727/72ba2bcf-004a-4459-932e-e72557814902" alt="Products" width="400"/>
-<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website-.NET/assets/136437727/5cfa708d-8cea-47cc-bf0e-04cbc1b7e17f" alt="User Manager" width="400"/>
-<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website-.NET/assets/136437727/8465ec26-6887-4ee6-a2e8-97b665e0a517" alt="Search on user account" width="400"/>
-<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website-.NET/assets/136437727/57842818-20a8-4c98-b691-94fcc49f893f" alt="Results" width="400"/>
+<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website/assets/136437727/be73c697-711b-45e8-9276-f9ce1cf4e6bf" alt="Login" width="400"/>
+<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website/assets/136437727/a006aaf9-d859-43e9-ace7-e8ee802972a0" alt="Product Detail" width="400"/>
+<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website/assets/136437727/6d7ee795-3b51-4442-b35a-15fcae15905e" alt="Add product" width="400"/>
+<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website/assets/136437727/5c8f7b84-aa67-4db5-a2d5-3c6ddbaa36ed" alt="Add store" width="400"/>
+<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website/assets/136437727/eafd9937-8b1c-4e24-b518-3cd3943565d5" alt="Products" width="400"/>
+<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website/assets/136437727/f8da4dd9-827e-4a78-9172-69870fd45b8b" alt="User Manager" width="400"/>
+<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website/assets/136437727/e9fa532c-0b10-48cf-8ac0-c140c02fda78" alt="Search on user account" width="400"/>
+<img src="https://github.com/techforimpact/MultiStore-Price-Comparison-Website/assets/136437727/ed380d9a-ad88-41ec-bc6a-ef29cb42ccb2" alt="Results" width="400"/>
 
