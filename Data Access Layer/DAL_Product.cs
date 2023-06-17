@@ -29,6 +29,11 @@ namespace Data_Access_Layer
             return products;
         }
 
+        public IEnumerable<Product> GetByPriceRange(decimal low , decimal high)
+        {
+            return db.Products.Where(p => p.Prices.Any(price => price.product_id == p.id && price.price1 >= low && price.price1 <= high));
+        }
+
 
         public IEnumerable<Product> GetbyName(string name)
         {

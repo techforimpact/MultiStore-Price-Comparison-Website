@@ -28,12 +28,15 @@ namespace Object_Layer
         public virtual DbSet<Carousel> Carousels { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<CategoryImage> CategoryImages { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Price> Prices { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<SecurityAnswer> SecurityAnswers { get; set; }
+        public virtual DbSet<SecurityQuestion> SecurityQuestions { get; set; }
         public virtual DbSet<StoreImage> StoreImages { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Wishlist> Wishlists { get; set; }
-        public virtual DbSet<Location> Locations { get; set; }
     }
 }

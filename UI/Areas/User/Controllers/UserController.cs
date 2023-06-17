@@ -29,6 +29,7 @@ namespace UI.Areas.User
         private DAL_User userdb;
         private DAL_Location locationdb;
         private Object_Layer.User currentUser;
+        private DAL_Comment commentdb;
         /*        private DAL_User userdb;
                 private Object_Layer.User sessionUser;*/
 
@@ -45,7 +46,7 @@ namespace UI.Areas.User
             userdb = new DAL_User();
             locationdb = new DAL_Location();
             currentUser = null;
-
+            commentdb = new DAL_Comment();
             /*            string customerId = TempData["customerId"].ToString();
 
 
@@ -149,6 +150,80 @@ namespace UI.Areas.User
         }
 
 
+
+        [HttpPost]
+        public ActionResult CategoryPage(CategoryViewModel model, FormCollection form)
+        {
+            var user = (Object_Layer.User)Session["CurrentUser"];
+            // var user = (User)TempData["CurrentUser"];
+
+            // Use the user object to display user data or perform other operations
+            if (user != null)
+            {
+                currentUser = user;
+            }
+
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
+            }
+
+
+            int categoryId = Convert.ToInt32(form["categoryId"]);
+
+            // Retrieve the selected price range from the form collection
+            string selectedPriceRange = form["price-range"];
+
+            // Filter the products based on the selected price range
+            switch (selectedPriceRange)
+            {
+                case "price-all":
+                    // Show all products
+                    model.Products = productdb.GetAll();
+                    break;
+                case "price-1":
+                    // Filter products in the range SAR 0 - 100
+                    model.Products = productdb.GetByPriceRange(0, 100);
+                    break;
+                case "price-2":
+                    // Filter products in the range SAR 100 - 200
+                    model.Products = productdb.GetByPriceRange(100, 200);
+                    break;
+                case "price-3":
+                    // Filter products in the range SAR 200 - 300
+                    model.Products = productdb.GetByPriceRange(200, 300);
+                    break;
+                case "price-4":
+                    // Filter products in the range SAR 300 - 400
+                    model.Products = productdb.GetByPriceRange(300, 400);
+                    break;
+                case "price-5":
+                    // Filter products in the range SAR 400 - 500
+                    model.Products = productdb.GetByPriceRange(400, 500);
+                    break;
+                default:
+                    // Show all products by default
+                    model.Products = productdb.GetAll();
+                    break;
+            }
+
+            model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
+            model.Category = categorydb.Getbyid(categoryId);
+            model.CategoryImage = categoryimagedb.Get(categoryId);
+            model.Prices = pricesdb.GetAll();
+
+
+            List<Category> categories = categorydb.GetAll().ToList();
+            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
+            ViewBag.WishlistCount = wishcount;
+            ViewBag.Categories = categorydb.GetSubcategories(categories);
+            ViewBag.Username = currentUser.name;
+
+            // Pass the model to the view
+            return View(model);
+        }
+
+
         public ActionResult Products()
         {
             var user = (Object_Layer.User)Session["CurrentUser"];
@@ -181,6 +256,77 @@ namespace UI.Areas.User
             return View(model);
         }
 
+        [HttpPost]
+        public ActionResult Products(SearchProductModelView model, FormCollection form)
+        {
+
+            var user = (Object_Layer.User)Session["CurrentUser"];
+            // var user = (User)TempData["CurrentUser"];
+
+            // Use the user object to display user data or perform other operations
+            if (user != null)
+            {
+                currentUser = user;
+            }
+
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
+            }
+
+            // Retrieve the selected price range from the form collection
+            string selectedPriceRange = form["price-range"];
+
+            // Filter the products based on the selected price range
+            switch (selectedPriceRange)
+            {
+                case "price-all":
+                    // Show all products
+                    model.Products = productdb.GetAll();
+                    break;
+                case "price-1":
+                    // Filter products in the range SAR 0 - 100
+                    model.Products = productdb.GetByPriceRange(0, 100);
+                    break;
+                case "price-2":
+                    // Filter products in the range SAR 100 - 200
+                    model.Products = productdb.GetByPriceRange(100, 200);
+                    break;
+                case "price-3":
+                    // Filter products in the range SAR 200 - 300
+                    model.Products = productdb.GetByPriceRange(200, 300);
+                    break;
+                case "price-4":
+                    // Filter products in the range SAR 300 - 400
+                    model.Products = productdb.GetByPriceRange(300, 400);
+                    break;
+                case "price-5":
+                    // Filter products in the range SAR 400 - 500
+                    model.Products = productdb.GetByPriceRange(400, 500);
+                    break;
+                default:
+                    // Show all products by default
+                    model.Products = productdb.GetAll();
+                    break;
+            }
+
+
+            model.Wishlist = wishlistdb.GetAll().Where(c => c.user_id == user.id);
+            model.Prices = pricesdb.GetAll();
+
+
+            List<Category> categories = categorydb.GetAll().ToList();
+            var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
+            ViewBag.WishlistCount = wishcount;
+            ViewBag.Categories = categorydb.GetSubcategories(categories);
+            ViewBag.Username = currentUser.name;
+            ViewBag.userid = currentUser.id;
+
+            // Pass the model to the view
+            return View(model);
+        }
+
+
 
         public ActionResult ProductDetail(int id)
         {
@@ -198,9 +344,8 @@ namespace UI.Areas.User
                 return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
             }
 
-
-
             var prod = productdb.Getbyid(id);
+            
             if (prod == null)
             {
                 return HttpNotFound();
@@ -213,6 +358,8 @@ namespace UI.Areas.User
             model.Product = prod;
             model.Prices = pricesdb.GetAll();
             model.StoreImages = storeimagedb.GetAll();
+            model.allcomments = commentdb.FindProductComments(prod.id);
+            
 
             List<Category> categories = categorydb.GetAll().ToList();
             var wishcount = wishlistdb.GetAll().Where(c => c.user_id == user.id).Count();
@@ -220,9 +367,46 @@ namespace UI.Areas.User
             ViewBag.Categories = categorydb.GetSubcategories(categories);
             ViewBag.Username = currentUser.name;
             ViewBag.userid = currentUser.id;
-
+            ViewBag.CommentCount = model.allcomments.Count();
 
             return View(model);
+        }
+
+
+
+        [HttpPost]
+        public ActionResult NewComment(ProductDetailModelView model)
+        {
+            var user = (Object_Layer.User)Session["CurrentUser"];
+            // var user = (User)TempData["CurrentUser"];
+
+            // Use the user object to display user data or perform other operations
+            if (user != null)
+            {
+                currentUser = user;
+            }
+
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index", "Default", new { area = "Common", controller = "Default" });
+            }
+
+            // Create a new comment object and populate its properties from the form data
+            var comment = new Object_Layer.Comment
+            {
+                user_id = user.id,
+                product_id = model.Product.id,
+                review_message = model.comment.review_message,
+                review_name = model.comment.review_name,
+                review_email = model.comment.review_email
+            };
+
+            // Save the comment to the database
+            commentdb.Insert(comment);
+
+
+            // Redirect to the product detail page or perform any other desired action
+            return RedirectToAction("ProductDetail", new { id = model.Product.id });
         }
 
         public ActionResult SearchProduct(string searchTerm)
@@ -642,6 +826,9 @@ namespace UI.Areas.User
         public IEnumerable<Wishlist> Wishlist { get; set; }
 
         public IEnumerable<StoreImage> StoreImages { get; set; }
+
+        public IEnumerable<Object_Layer.Comment> allcomments { get; set; }
+        public Object_Layer.Comment comment { get; set; }
 
 
     }

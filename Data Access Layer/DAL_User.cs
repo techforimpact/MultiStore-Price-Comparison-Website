@@ -42,6 +42,13 @@ namespace Data_Access_Layer
             return user;
         }
 
+        public User FindUserbyEmail(string email)
+        {
+            var user = db.Users.FirstOrDefault(p =>p.email == email);
+            return user;
+        }
+
+
         public void Update(User admin)
         {
             db.Entry(admin).State = System.Data.Entity.EntityState.Modified;

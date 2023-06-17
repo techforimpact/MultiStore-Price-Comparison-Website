@@ -1,4 +1,5 @@
 ﻿using Data_Access_Layer;
+using Google.Apis.Drive.v3.Data;
 using Object_Layer;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
+using UI.Areas.User;
 
 namespace UI.Areas.Common.Controllers
 {
@@ -21,6 +23,7 @@ namespace UI.Areas.Common.Controllers
         private DAL_StoreImages storeimagedb;
         private DAL_Price pricesdb;
         private DAL_Location locationdb;
+        private DAL_Comment commentdb;
         /*        private DAL_User userdb;
                 private Object_Layer.User sessionUser;*/
 
@@ -35,6 +38,7 @@ namespace UI.Areas.Common.Controllers
             storeimagedb = new DAL_StoreImages();
             pricesdb = new DAL_Price();
             locationdb = new DAL_Location();
+            commentdb = new DAL_Comment();
             /*            string customerId = TempData["customerId"].ToString();
 
 
@@ -133,6 +137,78 @@ namespace UI.Areas.Common.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult CategoryPage(CategoryViewModel model, FormCollection form)
+        {
+
+            var user = (Object_Layer.User)Session["CurrentUser"];
+            // var user = (User)TempData["CurrentUser"];
+
+            // Use the user object to display user data or perform other operations
+            if (user != null)
+            {
+                if (user.role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin", controller = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User", new { area = "User", controller = "User" });
+                }
+
+            }
+            int categoryId = Convert.ToInt32(form["categoryId"]);
+
+            // Retrieve the selected price range from the form collection
+            string selectedPriceRange = form["price-range"];
+
+            // Filter the products based on the selected price range
+            switch (selectedPriceRange)
+            {
+                case "price-all":
+                    // Show all products
+                    model.Products = productdb.GetAll();
+                    break;
+                case "price-1":
+                    // Filter products in the range SAR 0 - 100
+                    model.Products = productdb.GetByPriceRange(0, 100);
+                    break;
+                case "price-2":
+                    // Filter products in the range SAR 100 - 200
+                    model.Products = productdb.GetByPriceRange(100, 200);
+                    break;
+                case "price-3":
+                    // Filter products in the range SAR 200 - 300
+                    model.Products = productdb.GetByPriceRange(200, 300);
+                    break;
+                case "price-4":
+                    // Filter products in the range SAR 300 - 400
+                    model.Products = productdb.GetByPriceRange(300, 400);
+                    break;
+                case "price-5":
+                    // Filter products in the range SAR 400 - 500
+                    model.Products = productdb.GetByPriceRange(400, 500);
+                    break;
+                default:
+                    // Show all products by default
+                    model.Products = productdb.GetAll();
+                    break;
+            }
+
+            model.Category = categorydb.Getbyid(categoryId);
+            model.CategoryImage = categoryimagedb.Get(categoryId);
+            model.Prices = pricesdb.GetAll();
+
+            List<Category> categories = categorydb.GetAll().ToList();
+
+            ViewBag.Categories = categorydb.GetSubcategories(categories);
+
+            // Pass the model to the view
+            return View(model);
+        }
+
+
+
         public ActionResult Products()
         {
 
@@ -164,6 +240,76 @@ namespace UI.Areas.Common.Controllers
 
             return View(model);
         }
+
+
+        [HttpPost]
+        public ActionResult Products(ProductsViewModel model, FormCollection form)
+        {
+
+            var user = (Object_Layer.User)Session["CurrentUser"];
+            // var user = (User)TempData["CurrentUser"];
+
+            // Use the user object to display user data or perform other operations
+            if (user != null)
+            {
+                if (user.role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin", controller = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User", new { area = "User", controller = "User" });
+                }
+
+            }
+
+            // Retrieve the selected price range from the form collection
+            string selectedPriceRange = form["price-range"];
+
+            // Filter the products based on the selected price range
+            switch (selectedPriceRange)
+            {
+                case "price-all":
+                    // Show all products
+                    model.Products = productdb.GetAll();
+                    break;
+                case "price-1":
+                    // Filter products in the range SAR 0 - 100
+                    model.Products = productdb.GetByPriceRange(0, 100);
+                    break;
+                case "price-2":
+                    // Filter products in the range SAR 100 - 200
+                    model.Products = productdb.GetByPriceRange(100, 200);
+                    break;
+                case "price-3":
+                    // Filter products in the range SAR 200 - 300
+                    model.Products = productdb.GetByPriceRange(200, 300);
+                    break;
+                case "price-4":
+                    // Filter products in the range SAR 300 - 400
+                    model.Products = productdb.GetByPriceRange(300, 400);
+                    break;
+                case "price-5":
+                    // Filter products in the range SAR 400 - 500
+                    model.Products = productdb.GetByPriceRange(400, 500);
+                    break;
+                default:
+                    // Show all products by default
+                    model.Products = productdb.GetAll();
+                    break;
+            }
+
+
+            model.Prices = pricesdb.GetAll();
+
+
+            List<Category> categories = categorydb.GetAll().ToList();
+            ViewBag.Categories = categorydb.GetSubcategories(categories);
+
+            // Pass the model to the view
+            return View(model);
+        }
+
 
 
         public ActionResult ProductDetail(int id)
@@ -198,6 +344,7 @@ namespace UI.Areas.Common.Controllers
             model.Product = prod;
             model.Prices = pricesdb.GetAll();
             model.StoreImages = storeimagedb.GetAll();
+            model.AllComments = commentdb.FindProductComments(prod.id);
 
             List<Category> categories = categorydb.GetAll().ToList();
 
@@ -206,6 +353,30 @@ namespace UI.Areas.Common.Controllers
 
             return View(model);
         }
+
+        [HttpPost]
+        public ActionResult NewComment(Object_Layer.Comment comm)
+        {
+            var user = (Object_Layer.User)Session["CurrentUser"];
+            // var user = (User)TempData["CurrentUser"];
+
+            // Use the user object to display user data or perform other operations
+            if (user != null)
+            {
+                if (user.role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin", new { area = "Admin", controller = "Admin" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "User", new { area = "User", controller = "User" });
+                }
+
+            }
+
+            return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+        }
+
 
         public ActionResult SearchProduct(string searchTerm)
         {
@@ -334,6 +505,16 @@ namespace UI.Areas.Common.Controllers
             return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
         }
 
+
+
+        public ActionResult NewComment(int id)
+        {
+            return RedirectToAction("Index", "Login", new { controller = "Login", area = "Security" });
+        }
+
+
+
+
     }
 
 
@@ -387,6 +568,8 @@ namespace UI.Areas.Common.Controllers
         public IEnumerable<Price> Prices { get; set; }
         public IEnumerable<Product> FilteredProducts { get; set; }
         public IEnumerable<StoreImage> StoreImages { get; set; }
+        public IEnumerable<Object_Layer.Comment> AllComments { get; set; }
+        public Object_Layer.Comment comment { get; set; }
     }
 
     public class ProductsViewModel

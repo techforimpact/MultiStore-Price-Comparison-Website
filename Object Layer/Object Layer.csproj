@@ -202,6 +202,9 @@
     <Compile Include="CategoryImage.cs">
       <DependentUpon>MultiStore.tt</DependentUpon>
     </Compile>
+    <Compile Include="Comment.cs">
+      <DependentUpon>MultiStore.tt</DependentUpon>
+    </Compile>
     <Compile Include="Location.cs">
       <DependentUpon>MultiStore.tt</DependentUpon>
     </Compile>
@@ -227,6 +230,12 @@
       <DependentUpon>MultiStore.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecurityAnswer.cs">
+      <DependentUpon>MultiStore.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SecurityQuestion.cs">
+      <DependentUpon>MultiStore.tt</DependentUpon>
+    </Compile>
     <Compile Include="Store.cs">
       <DependentUpon>MultiStore.tt</DependentUpon>
     </Compile>

@@ -17,14 +17,8 @@
                 <div class="navbar-nav w-100">
                     @foreach (var category in ((IEnumerable<Object_Layer.Category>)ViewBag.Categories).Where(c => c.parent_id == null))
                     {
-                        <div class="nav-item dropdown dropright">
-                            <a href="@Url.Action("CategoryPage", "User", new { categoryId = category.id })" class="nav-link dropdown-toggle" data-toggle="dropdown">@category.name <i class="fa fa-angle-right float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                @foreach (var subcategory in ((IEnumerable<Object_Layer.Category>)ViewBag.Categories).Where(c => c.parent_id == category.id))
-                                {
-                                    <a href="@Url.Action("CategoryPage", "User", new { categoryId = subcategory.id })" class="dropdown-item">@subcategory.name</a>
-                                }
-                            </div>
+                        <div class="nav-item link">
+                            <a href="@Url.Action("CategoryPage", "User", new { categoryId = category.id })" class="nav-link">@category.name</a>
                         </div>
                     }
                 </div>
@@ -107,13 +101,13 @@
                         {
                             var basic = Convert.ToBase64String(Model.StoreImages.Where(c => c.store_id == item.store_id).First().imageurl);
                             var img = string.Format("data:image/jpg;base64,{0}", basic);
-                        <div class="sub-container">
-                            <img src="@img" alt="Product Image" class="product-image">
-                            <div class="product-details">
-                                <div class="name">@item.Store.name</div>
-                                <div class="price">@item.price1</div>
+                            <div class="sub-container">
+                                <img src="@img" alt="Product Image" class="product-image">
+                                <div class="product-details">
+                                    <div class="name">@item.Store.name</div>
+                                    <div class="price">@item.price1</div>
+                                </div>
                             </div>
-                        </div>
                         }
                         <!-- Add more sub-containers as needed -->
                     </div>
@@ -135,27 +129,9 @@
                         <a class="btn btn-primary px-3" href="@Url.Action("RemoveWishlist" , "User" , new { id = Model.Product.id })">
                             <i class="fa fa-heart mr-1"></i> Remove From Wishlist
                         </a>
-                        
+
                     }
 
-
-                    <div>
-                        <strong class="mr-2">Share on:</strong>
-                        <div class="d-inline-flex">
-                            <a class="px-2" href="">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a class="px-2" href="">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a class="px-2" href="">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                            <a class="px-2" href="">
-                                <i class="fab fa-pinterest"></i>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -165,13 +141,70 @@
             <div class="bg-light p-30">
                 <div class="nav nav-tabs mb-4">
                     <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
+                    <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Comments (@Model.allcomments.Count())</a>
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
                         <h4 class="mb-3">Product Description</h4>
                         <p>@Model.Product.description</p>
                     </div>
+
+
+                    <div class="tab-pane fade show" id="tab-pane-2">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="mb-4">@ViewBag.CommentCount review for "@Model.Product.name"</h4>
+
+                                @foreach(var item in Model.allcomments) {
+
+                                <div class="media mb-4">
+                                    <div class="media-body">
+                                        <h6>@item.review_name</h6>
+
+                                        <p>@item.review_message</p>
+                                    </div>
+                                </div>
+                                }
+
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <h4 class="mb-4">Leave a review</h4>
+                                <small>Your email address will not be published. Required fields are marked *</small>
+
+
+                                @using (Html.BeginForm("NewComment", "User", FormMethod.Post))
+                                {
+                                    @Html.HiddenFor(model => model.Product.id)
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.comment.review_message, "Your Review *")
+                                        @Html.TextAreaFor(model => model.comment.review_message, new { @class = "form-control", rows = 5 })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.comment.review_name, "Your Name *")
+                                        @Html.TextBoxFor(model => model.comment.review_name, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.comment.review_email, "Your Email *")
+                                        @Html.TextBoxFor(model => model.comment.review_email, new { @class = "form-control", type = "email" })
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <input type="submit" value="Leave Your Review" class="btn btn-primary px-3" />
+                                    </div>
+                                }
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+
                 </div>
+
             </div>
         </div>
     </div>

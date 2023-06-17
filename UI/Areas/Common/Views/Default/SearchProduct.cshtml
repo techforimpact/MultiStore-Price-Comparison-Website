@@ -17,14 +17,8 @@
                 <div class="navbar-nav w-100">
                     @foreach (var category in ((IEnumerable<Object_Layer.Category>)ViewBag.Categories).Where(c => c.parent_id == null))
                     {
-                        <div class="nav-item dropdown dropright">
-                            <a href="@Url.Action("CategoryPage", "User", new { categoryId = category.id })" class="nav-link dropdown-toggle" data-toggle="dropdown">@category.name <i class="fa fa-angle-right float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                @foreach (var subcategory in ((IEnumerable<Object_Layer.Category>)ViewBag.Categories).Where(c => c.parent_id == category.id))
-                                {
-                                    <a href="@Url.Action("CategoryPage", "Default", new { categoryId = subcategory.id })" class="dropdown-item">@subcategory.name</a>
-                                }
-                            </div>
+                        <div class="nav-item link">
+                            <a href="@Url.Action("CategoryPage", "Default", new { categoryId = category.id })" class="nav-link">@category.name</a>
                         </div>
                     }
                 </div>
@@ -85,23 +79,23 @@
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         @Html.CheckBox("price-range", false, new { @class = "custom-control-input", id = "price-1" })
-                        @Html.Label("price-1", "$0 - $100", new { @class = "custom-control-label" })
+                        @Html.Label("price-1", "SAR 0 - 100", new { @class = "custom-control-label" })
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         @Html.CheckBox("price-range", false, new { @class = "custom-control-input", id = "price-2" })
-                        @Html.Label("price-2", "$100 - $200", new { @class = "custom-control-label" })
+                        @Html.Label("price-2", "SAR 100 - 200", new { @class = "custom-control-label" })
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         @Html.CheckBox("price-range", false, new { @class = "custom-control-input", id = "price-3" })
-                        @Html.Label("price-3", "$200 - $300", new { @class = "custom-control-label" })
+                        @Html.Label("price-3", "SAR 200 - 300", new { @class = "custom-control-label" })
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         @Html.CheckBox("price-range", false, new { @class = "custom-control-input", id = "price-4" })
-                        @Html.Label("price-4", "$300 - $400", new { @class = "custom-control-label" })
+                        @Html.Label("price-4", "SAR 300 - 400", new { @class = "custom-control-label" })
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
                         @Html.CheckBox("price-range", false, new { @class = "custom-control-input", id = "price-5" })
-                        @Html.Label("price-5", "$400 - $500", new { @class = "custom-control-label" })
+                        @Html.Label("price-5", "SAR 400 - 500", new { @class = "custom-control-label" })
                     </div>
                     <br />
                     <button class="btn btn-primary" type="submit">Apply Filter</button>

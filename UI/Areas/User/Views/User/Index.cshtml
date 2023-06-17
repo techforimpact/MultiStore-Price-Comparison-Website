@@ -16,14 +16,8 @@
                 <div class="navbar-nav w-100">
                     @foreach (var category in ((IEnumerable<Object_Layer.Category>)ViewBag.Categories).Where(c => c.parent_id == null))
                     {
-                        <div class="nav-item dropdown dropright">
-                            <a href="@Url.Action("CategoryPage", "User", new { categoryId = category.id })" class="nav-link dropdown-toggle" data-toggle="dropdown">@category.name <i class="fa fa-angle-right float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                @foreach (var subcategory in ((IEnumerable<Object_Layer.Category>)ViewBag.Categories).Where(c => c.parent_id == category.id))
-                                {
-                                    <a href="@Url.Action("CategoryPage", "User", new { categoryId = subcategory.id })" class="dropdown-item">@subcategory.name</a>
-                                }
-                            </div>
+                        <div class="nav-item link">
+                            <a href="@Url.Action("CategoryPage", "User", new { categoryId = category.id })" class="nav-link">@category.name</a>
                         </div>
                     }
                 </div>

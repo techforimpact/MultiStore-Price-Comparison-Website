@@ -4,31 +4,68 @@
     Layout = "~/Areas/Security/Views/Shared/_Layout.cshtml";
 }
 
+<div class="right">
+    <div class="form-heading">
+        <h4>Welcome New User!</h4>
+        <p>Already have an account? @Html.ActionLink("Log In", "Index", new { controller = "Home", area = "Security" })</p>
+    </div>
 
-<div class="form-heading">
-    <h4>Welcome New User!</h4>
-    <p>Already have an account? @Html.ActionLink("Log In", "Index", new { controller = "Home", area = "Security" })</p>
+    <form method="post" class="form-container" action="RegisterUser">
+
+        <label for="username"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username" id="username" required>
+
+        <label for="email"><b>Email</b></label>
+        <input type="email" placeholder="Enter email" id="email" name="email" required>
+
+        <label for="password"><b>New Password</b></label>
+        <input type="password" placeholder="Enter New Password" id="password" name="password" required>
+        <span id="passwordError" style="color: red;"></span>
+
+        <label for="password"><b>Confirm Password</b></label>
+        <input type="password" placeholder="Re-enter Password" id="confpassword" name="confpassword" required>
+
+        <label for="securityQuestion"><b>Security Question</b></label>
+        <select id="securityQuestion" name="securityQuestion" required>
+            <option value="1">What is your mother's maiden name?</option>
+            <option value="2">What is the name of your favorite childhood pet?</option>
+            <option value="3">What was the make and model of your first car?</option>
+            <option value="4">In which city were you born?</option>
+            <option value="5">What is the name of your favorite book?</option>
+            <option value="6">What is your favorite movie?</option>
+            <option value="7">What is the name of your best friend from childhood?</option>
+            <option value="8">What is your favorite vacation destination?</option>
+            <option value="9">What is your favorite food?</option>
+            <option value="10">What is the name of the street you grew up on?</option>
+        </select>
+
+        <label for="securityAnswer"><b>Security Answer</b></label>
+        <input type="text" placeholder="Enter the Answer" id="securityAnswer" name="securityAnswer" required>
+
+        <br />
+        <button type="submit" class="btn">Register</button>
+
+    </form>
+
+    <p class="form-heading text-danger">@ViewBag.Message</p>
 </div>
 
-<form method="post" class="form-container" action="RegisterUser">
 
-    <label for="fullname"><b>Full Name</b></label>
-    <input type="text" placeholder="Enter Full Name" name="fullname" id="fullname" required>
+<script>
+    var passwordInput = document.getElementById('password');
+    var passwordError = document.getElementById('passwordError');
 
-    <label for="username"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="email" id="username" required>
+    passwordInput.addEventListener('input', validatePassword);
 
-    <label for="email"><b>Email</b></label>
-    <input type="email" placeholder="Enter email" id="email" name="email" required>
+    function validatePassword() {
+        var password = passwordInput.value;
+        var uppercaseRegex = /[A-Z]/;
+        var digitRegex = /\d/;
 
-    <label for="password"><b>New Password</b></label>
-    <input type="password" placeholder="Enter New Password" id="password" name="password" required>
-
-
-    <label for="password"><b>Confirm Password</b></label>
-    <input type="password" placeholder="Re-enter Password" id="confpassword" name="confpassword" required>
-
-    <br />
-    <button type="submit" class="btn">Register</button>
-
-</form>
+        if (!uppercaseRegex.test(password) || !digitRegex.test(password)) {
+            passwordError.textContent = 'Password must contain at least one uppercase letter and one digit.';
+        } else {
+            passwordError.textContent = '';
+        }
+    }
+</script>

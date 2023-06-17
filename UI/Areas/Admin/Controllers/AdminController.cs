@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using UI.Models;
 using System.Text;
 using System.Drawing;
 using System.IO;
@@ -83,7 +82,7 @@ namespace UI.Areas.Admin.Controllers
         }
 
 
-        //------------------------CATEGORIES CODE----------------------------------------------------------
+        //------------------------CATEGORIES CODE FOR ADMIN----------------------------------------------------------
 
         public ActionResult Categories()
         {
